@@ -1,3 +1,4 @@
 *.pdf
 *.data
 *.swp
+.DS_Store
