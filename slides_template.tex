@@ -1,0 +1,243 @@
+\documentclass{beamer}
+\usecolortheme{dolphin}
+%\usetheme{Warsaw}
+
+\usepackage{amsmath,amssymb,amsrefs}
+\usepackage{amscd}
+\usepackage{latexsym}
+\usepackage{graphics}
+\usepackage{subfigure}
+\usepackage{placeins}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{times}  % fonts are up to you
+\usepackage[authoryear]{natbib}
+\def\newblock{\hskip .11em plus .33em minus .07em} %this line is used to
+% fix the bug of natbib that ``\newblock'' undefined.
+\usepackage{array}
+
+\usepackage{lipsum}
+
+ \setbeamersize{text margin left=11pt,text margin right=8pt}
+
+
+
+\newcommand\mydef{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily def}}}{=}}}
+
+\usepackage{soul}
+
+
+
+\newif\ifpaper
+
+% \papertrue % or
+\paperfalse
+
+
+\usepackage{graphicx}
+\usepackage{nicefrac}
+\usepackage{lscape}
+\usepackage{times}
+% \usepackage[dvips,colorlinks=true,linkcolor=red,filecolor=green,citecolor=red]{hyperref}
+%\usepackage[]{amsmath,amssymb,epsfig}
+% \usepackage{subfigure}
+\usepackage{mathtools}%
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{wrapfig}
+
+
+
+
+
+\newcommand{\mb}[1]{\mbox{\boldmath$#1$}}
+
+\setbeamertemplate{headline}{\scriptsize{\vspace*{0.1cm}\hspace*{0.1cm}\insertframenumber}}
+
+\title{Project title}
+\author{ First~Author, Second~Author\\
+\vspace{5mm}
+MATH 191 Graphs and Networks, UCLA}
+% \institute[]{ Applied Mathematics, UCLA
+% Applied and Computational Mathematics, \\
+% Princeton University
+% }
+%\address{PACM Graduate Student Seminar}
+% \date{ Harvard University \\ February 24, 2014}
+
+\date{ \today}
+
+% note: do NOT include a \maketitle line; also note that this title
+% material goes BEFORE the \begin{document}
+
+%%%%% have this if you'd like a recurring outline
+\AtBeginSection[]  % "Beamer, do the following at the start of every section"
+{
+\begin{frame}<beamer>
+  \frametitle{Outline} % make a frame titled "Outline"
+  \tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+
+\begin{document}
+
+\newtheorem{theo}{Theorem}
+\newtheorem{lem}{Lemma}
+\newtheorem{defin}{Definition}
+\newtheorem{prop}{Proposition}
+\newtheorem{ex}{Example}
+\newtheorem{alg}{Algorithm}
+\newtheorem{cor}{Corollary}
+\newtheorem{case}{Case}
+
+
+% this prints title, author etc. info from above
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+
+\section{Introduction}
+
+\begin{frame}
+     \frametitle{Introduction}
+A list of items:
+\begin{itemize}
+\item item 1
+\item  item 2
+\item  item 3
+\end{itemize}
+\end{frame}
+
+
+
+\section{Related Work}
+
+\begin{frame}
+     \frametitle{Related Work}
+A list of items:
+\begin{itemize}
+\item item 1
+\item  item 2
+\item  item 3
+\end{itemize}
+\end{frame}
+
+
+
+
+ 
+
+
+\section{Our work}    \label{sec:ourWork}
+
+\begin{frame}
+     \frametitle{ Our work}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.76\columnwidth]{Directed_Core_Per}
+\end{center}
+\caption{A Figure}
+\label{fig:DirCorPer}
+\end{figure}
+
+\end{frame}
+
+
+
+\section{Numerical experiments on synthetic data}  \label{sec:NumExpSyn}
+
+\begin{frame}
+\frametitle{Numerical experiments on synthetic data}
+\begin{itemize}
+\item xyz
+\item xyz
+\end{itemize}
+\end{frame}
+
+
+\section{Numerical experiments on real data}   \label{sec:NumExpReal}
+
+\begin{frame}
+\frametitle{Numerical experiments on real data 1}
+\begin{itemize}
+\item xyz
+\item xyz
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Numerical experiments on real data 2}
+\begin{itemize}
+\item xyz
+\item xyz
+\end{itemize}
+\end{frame}
+
+
+
+
+\section{Summary and conclusion}  \label{sec:conclusion}
+
+\begin{frame}
+\frametitle{Summary of our work}
+\begin{itemize}
+\item xyz
+\item xyz
+\end{itemize}
+\end{frame}
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}
+     \frametitle{ x }
+\begin{itemize}
+\item 
+\item 
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+     \frametitle{ x }
+\begin{itemize}
+\item 
+\item 
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+     \frametitle{ x }
+\begin{itemize}
+\item 
+\item 
+\end{itemize}
+\end{frame}
+
+
+
+
+
