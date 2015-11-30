@@ -2,3 +2,6 @@
 *.data
 *.swp
 .DS_Store
+.RData
+.Rhistory
+
