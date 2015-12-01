@@ -1,5 +1,3 @@
-*.pdf
-*.data
 *.sw*
 .DS_Store
 .RData
