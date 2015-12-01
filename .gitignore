@@ -1,4 +1,6 @@
-*.pdf
-*.data
-*.swp
+*.sw*
 .DS_Store
+.RData
+.Rhistory
+TSWLatexianTemp_*
+
