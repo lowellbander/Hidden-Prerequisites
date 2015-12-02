@@ -114,19 +114,40 @@ MATH 191 Topics in Data Science, UCLA}
 
 
 \section{Related Work}
-
+\subsection{SerialRank}
 \begin{frame}
      \frametitle{Related Work}
-A list of items:
 \begin{itemize}
-\item item 1
-\item  item 2
-\item  item 3
+\item For SerialRank, we use a matrix C of size n x n of pairwise comparisons, defined as follows :
+\begin{equation}
+C_{ij} = \left\{
+	\begin{array}{rl}
+ 1 & \text{ for i is ranked higher than j (or i=j)} 	\\
+ &  \\
+ 0 & \text{ for i and j are tied or have no available comparison }	\\
+ &  \\
+ -1 & \text{ for j is ranked higher than i} 
+     \end{array}
+   \right.
+\label{myExpValue}
+\end{equation}
+The pairwise similarity matrix is constructed as follows
+
+$$S_{ij}^{match} = \sum_{k=1}^{n}(\frac{1+C_{ik}C_{jk}}{2})$$
+Then compute the Laplacian matrix $L_{S} = diag(S1) - S$ and finally computing and sorting the Fiedler vector of S will give the ranking. 
+
 \end{itemize}
 \end{frame}
 
+\subsection{Rank-Centrality}
 
+\begin{frame}
+     \frametitle{Related Work}
+\begin{itemize}
+\item For Rank-Centrality, we ???
 
+\end{itemize}
+\end{frame}
 
  
 
