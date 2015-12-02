@@ -107,7 +107,7 @@ MATH 191 Topics in Data Science, UCLA}
 \item The objective is to use ranking algorithms to discover hidden prerequisites in the Math and Computer Science curriculums 
 \item  We have access to data containing 13,000+ students' GPA's and the order in which they have taken their classes
 \item  We will be using the rank centrality and serial rank algorithms to rank the courses
-\item By contrasting the different orderings of classes taken for high gpa students vs. low gpa students, we should be able to find courses that should precede other courses
+\item By contrasting the different orderings of classes taken for high GPA students vs. low GPA students, we should be able to find courses that should precede other courses
 \end{itemize}
 \end{frame}
 
@@ -142,17 +142,33 @@ Then compute the Laplacian matrix $L_{S} = diag(S1) - S$ and finally computing a
 \begin{frame}
      \frametitle{Serial Rank}
 \begin{itemize}
-\item For Serial Rank, we shall split the data into sets of high gpa students and low gpa students.
+\item For Serial Rank, we shall split the data into sets of high GPA students and low GPA students.
 \item Then we build similarity matrices for each student in both sets as described in the previous slide
 \item We combine all the similarity matrices into 1 normalized similarity matrix for each set and look at the pairwise difference of each entry in the two matrices.
-\item If the difference is large, the course taken by the high gpa students should be a prerequisite to the course taken by the low gpa students!
-\item We then use these two similarity matrixes to rank courses according to the algorithm described.
+\item If the difference is large, the course taken by the high GPA students should be a prerequisite to the course taken by the low GPA students!
+\item At this point, we could construct a total ordering of courses which optimizes for completeness of understanding using the metric of GPA.
+\color{red}
+\item However, \color{black} total ordering ignores the fact that many courses can and are taken concurrently.
 \end{itemize}
 \end{frame}
 
-\subsection{Rank Centrality}
+\subsection{DAG Construction}
 \begin{frame}
-     \frametitle{Rank Centrality}
+     \frametitle{DAG Construction}
+\centerline{\includegraphics[width=0.76\columnwidth]{a_c.png}}
+\end{frame}
+
+\begin{frame}
+     \frametitle{DAG Construction}
+\centerline{\includegraphics[width=1\columnwidth]{graph_construction.png}}
+\begin{itemize}
+\item The difference matrix stores a representation of the importance of taking course $i$ before course $j$
+\item We can use this to construct a completely connected graph, where the edge weight between nodes $i$ and $j$ is taken from the $ij^{th}$ entry of the difference matrix.
+\begin{itemize}
+\item The sign of this value determines the directionality of the edge
+\end{itemize}
+\item We now have a quantitative measure of ``prerequisite-ness", and can prune edges based on some threshold to make the graph acyclic
+\end{itemize}
 \end{frame}
 
 \section{Summary and conclusion}  \label{sec:conclusion}
@@ -160,17 +176,15 @@ Then compute the Laplacian matrix $L_{S} = diag(S1) - S$ and finally computing a
 \begin{frame}
 \frametitle{Summary of our work}
 \begin{itemize}
-%\item We hope to discover some hidden prerequisites in the curriculums and improve the experience for future UCLA students by presenting our findings to the respective departments
-%\item We hope to arrive at prerequisites empirically, 
 \item Currently, prerequisites are rather static, at times arbitrary, and thus sometimes inaccurate 
 \begin{itemize}
 \item Some courses are prerequisites for others when they need not be
 \item Some courses ought to be taken before others, but are not presently listed as prerequisites
 \end{itemize}
 \item We hope to empirically validate whether courses should be prerequisites
-\item From this we can generate a directed acyclic graph which optimizes total understanding of Math/Computer Science
+\item From this we can generate both a total ordering and a directed acyclic graph which optimizes total understanding of Math/Computer Science
 \end{itemize} 
-\centerline{\includegraphics[width=0.76\columnwidth]{dag.png}}
+\centerline{\includegraphics[width=0.6\columnwidth]{dag.png}}
 \end{frame}
 \end{document}
 
