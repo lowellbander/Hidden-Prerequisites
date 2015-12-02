@@ -104,29 +104,29 @@ MATH 191 Topics in Data Science, UCLA}
 \begin{frame}
      \frametitle{Introduction}
 \begin{itemize}
-\item The Objective is to use ranking algorithms to discover hidden prerequisites in the Math and CS departments.
-\item  We have access to data which contains X,000 students, their GPA's and the order in which they have taken their classes.
-\item  We will be using the rank centrality and serial rank algorithms.
-\item By contrasting the different orderings of classes taken for high gpa students vs. low gpa students, we should be able to find courses that should precede other courses.
+\item The objective is to use ranking algorithms to discover hidden prerequisites in the Math and Computer Science curriculums 
+\item  We have access to data containing 13,000+ students' GPA's and the order in which they have taken their classes
+\item  We will be using the rank centrality and serial rank algorithms to rank the courses
+\item By contrasting the different orderings of classes taken for high gpa students vs. low gpa students, we should be able to find courses that should precede other courses
 \end{itemize}
 \end{frame}
 
 
 
-\section{Related Work}
-\subsection{SerialRank}
+\section{Our Work}
+\subsection{Serial Rank}
 \begin{frame}
-     \frametitle{Related Work}
+     \frametitle{Serial Rank}
 \begin{itemize}
-\item For SerialRank, we use a matrix C of size n x n of pairwise comparisons, defined as follows :
+\item For Serial Rank, we use a matrix C of size n x n of pairwise comparisons (where n is the number of courses offered by the CS/Math departments), defined as follows :
 \begin{equation}
 C_{ij} = \left\{
 	\begin{array}{rl}
- 1 & \text{ for i is ranked higher than j (or i=j)} 	\\
+ 1 & \text{ if course i is taken before course j (or i=j)} 	\\
  &  \\
  0 & \text{ for i and j are tied or have no available comparison }	\\
  &  \\
- -1 & \text{ for j is ranked higher than i} 
+ -1 & \text{ if course j is taken before course i} 
      \end{array}
    \right.
 \label{myExpValue}
@@ -137,119 +137,33 @@ $$S_{ij}^{match} = \sum_{k=1}^{n}(\frac{1+C_{ik}C_{jk}}{2})$$
 Then compute the Laplacian matrix $L_{S} = diag(S1) - S$ and finally computing and sorting the Fiedler vector of S will give the ranking. 
 
 \end{itemize}
-\end{frame}
-
-\subsection{Rank-Centrality}
+\end{frame} 
 
 \begin{frame}
-     \frametitle{Related Work}
+     \frametitle{Serial Rank}
 \begin{itemize}
-\item For Rank-Centrality, we ???
-
+\item For Serial Rank, we shall split the data into sets of high gpa students and low gpa students.
+\item Then we build similarity matrices for each student in both sets as described in the previous slide
+\item We combine all the similarity matrices into 1 normalized similarity matrix for each set and look at the pairwise difference of each entry in the two matrices.
+\item If the difference is large, the course taken by the high gpa students should be a prerequisite to the course taken by the low gpa students!
+\item We then use these two similarity matrixes to rank courses according to the algorithm described.
 \end{itemize}
 \end{frame}
 
- 
-
-
-\section{Our work}    \label{sec:ourWork}
-
+\subsection{Rank Centrality}
 \begin{frame}
-     \frametitle{ Our work}
+     \frametitle{Rank Centrality}
 \end{frame}
-
-
-
-\section{Numerical experiments on synthetic data}  \label{sec:NumExpSyn}
-
-\begin{frame}
-\frametitle{Numerical experiments on synthetic data}
-\begin{itemize}
-\item xyz
-\item xyz
-\end{itemize}
-\end{frame}
-
-
-\section{Numerical experiments on real data}   \label{sec:NumExpReal}
-
-\begin{frame}
-\frametitle{Numerical experiments on real data 1}
-\begin{itemize}
-\item xyz
-\item xyz
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Numerical experiments on real data 2}
-\begin{itemize}
-\item xyz
-\item xyz
-\end{itemize}
-\end{frame}
-
-
-
 
 \section{Summary and conclusion}  \label{sec:conclusion}
 
 \begin{frame}
 \frametitle{Summary of our work}
 \begin{itemize}
-\item xyz
-\item xyz
-\end{itemize}
+\item We hope to discover some hidden prerequisites in the curriculums and improve the experience for future UCLA students by presenting our findings to the respective departments
+\end{itemize} 
 \end{frame}
-
-
-
-
-
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-\begin{frame}
-     \frametitle{ x }
-\begin{itemize}
-\item 
-\item 
-\end{itemize}
-\end{frame}
-
-
-
-
-\begin{frame}
-     \frametitle{ x }
-\begin{itemize}
-\item 
-\item 
-\end{itemize}
-\end{frame}
-
-
-
-
-\begin{frame}
-     \frametitle{ x }
-\begin{itemize}
-\item 
-\item 
-\end{itemize}
-\end{frame}
-
 
 
 
