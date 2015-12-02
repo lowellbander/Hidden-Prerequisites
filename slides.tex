@@ -160,8 +160,17 @@ Then compute the Laplacian matrix $L_{S} = diag(S1) - S$ and finally computing a
 \begin{frame}
 \frametitle{Summary of our work}
 \begin{itemize}
-\item We hope to discover some hidden prerequisites in the curriculums and improve the experience for future UCLA students by presenting our findings to the respective departments
+%\item We hope to discover some hidden prerequisites in the curriculums and improve the experience for future UCLA students by presenting our findings to the respective departments
+%\item We hope to arrive at prerequisites empirically, 
+\item Currently, prerequisites are rather static, at times arbitrary, and thus sometimes inaccurate 
+\begin{itemize}
+\item Some courses are prerequisites for others when they need not be
+\item Some courses ought to be taken before others, but are not presently listed as prerequisites
+\end{itemize}
+\item We hope to empirically validate whether courses should be prerequisites
+\item From this we can generate a directed acyclic graph which optimizes total understanding of Math/Computer Science
 \end{itemize} 
+\centerline{\includegraphics[width=0.76\columnwidth]{dag.png}}
 \end{frame}
 \end{document}
 
