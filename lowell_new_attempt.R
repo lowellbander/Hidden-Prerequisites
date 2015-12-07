@@ -44,11 +44,45 @@ main <- function () {
 
   # Build the 3D-array of size nrCourses x nrCourses x nrStudents
   for(stud in remIDs){
-    COMPTD[,,stud] <- genMyComp(listStud[[stud]], EmptyComp);
+    COMPTD[,,stud] <- generateComparisonMatrix(listStud[[stud]], EmptyComp);
+  }
+  print(COMPTD);
+}
+
+compare = function (this, that, courses) {
+  thisPosition <- match(this, courses);
+  thatPosition <- match(that, courses);
+
+  if (is.na(thisPosition) | is.na(thatPosition)) {
+    return(0);
+  } else if (thisPosition < thatPosition){
+    return(1);
+  } else {
+    return(-1);
   }
 }
 
-genMyComp = function (courseOrdering, emptyComparisonMatrix) {
+# courses: a list of unique strings. e.g.,  ["10A", "32B",  "33A", ...]
+# emptyComparisonMatrix: an empty comparison matrix to fill
+generateComparisonMatrix = function (courses, emptyComparisonMatrix) {
 
-  return(emptyComparisonMatrix);
+  # Our comparison matrix, C, initialized to empty.
+  C <- emptyComparisonMatrix;
+  n <- dim(emptyComparisonMatrix)[1]
+
+  cols <- colnames(C)
+  rows <- rownames(C)
+
+  for (i in 1:n) {
+    for (j in 1:n) {
+      if (i == j) {
+        C[i,j] <- 1;
+      } else {
+        C[i,j] <- compare(cols[i], rows[j], courses);
+      }
+    }
+  }
+  return(C);
 }
+
+main();
