@@ -12,15 +12,15 @@ rownames(DF) <- as.character(DF$ID);
 nrCoursesStud = sapply(listStud, length);
 DFNRC <- data.frame(nrC = nrCoursesStud);
 rownames(DFNRC) <- names(listStud); # why is this necessary?
-DF$nrC <- DFNRC[ rownames(DF) , 'nrC' ]
+DF$nrC <- DFNRC[rownames(DF), 'nrC']
 
 # generate a subset of DF with only A range students who have taken at least 7 math courses
 myDescGrade <- 'A';	
-A <- subset(DF,  GPA >= 3.7 & nrC >= 7  );
+A <- subset(DF, GPA >= 3.7 & nrC >= 7);
 remIDs <- as.character(A$ID);
 
 # subsets listStud for desired GPA and nrc (?)
-listStud <- listStud[ remIDs ];
+listStud <- listStud[remIDs];
 
 # generate requisite metadata:
 # * unqCourses, a sorted and unique list of all courses in the dataset
@@ -28,16 +28,16 @@ listStud <- listStud[ remIDs ];
 # * nrRemIDs, the number of students in the subset of students selected
 AllCourses <- NULL;
 for( stud in remIDs){
-  AllCourses <- c(AllCourses, listStud[[ stud ]] );
+  AllCourses <- c(AllCourses, listStud[[stud]]);
 }
 unqCourses <- sort(unique(AllCourses));
 nrUnqCourses <- length(unqCourses);
 nrRemIDs <- length(remIDs);
 
 #initialize 3D-array of size nrCourses x nrCourses x nrStudents
-COMPTD <- array(0, dim = c(nrUnqCourses, nrUnqCourses, nrRemIDs) );
+COMPTD <- array(0, dim = c(nrUnqCourses, nrUnqCourses, nrRemIDs));
 dimnames(COMPTD) <- list(unqCourses, unqCourses, remIDs);
-EmptyComp <- array(0, dim = c(nrUnqCourses, nrUnqCourses) );
+EmptyComp <- array(0, dim = c(nrUnqCourses, nrUnqCourses));
 rownames(EmptyComp) <- unqCourses;
 colnames(EmptyComp) <- unqCourses;
 
