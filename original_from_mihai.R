@@ -12,11 +12,9 @@ print(names(listStud))  # these are the student ID (hash value)
 print(listStud[[ 1 ]]);  # first student
 print(listStud[ 1:10 ]);  # first 10 students
 
-
 # DF: a data frame with info on GPA and nrCourses taken
 print(dim(DF))
 rownames(DF) = as.character(DF$ID);		print(head(DF,30));
-
 
 pdf('HistGrades.pdf');
 hist(DF$GPA, breaks=100, main='Histogram of GPA grades');
@@ -66,18 +64,15 @@ pdf(paste('CourseFreq_',myDescGrade,'_students.pdf', sep='') );
 barplot(sortedFreqCourses, las = 2, cex.names = 0.5, main = paste('Distribution of courses taken. \n  nr Stud=', nrRemIDs,'; grade= ',myDescGrade,'; nrUniqueCourses=', nrUnqCourses) , horiz=TRUE);
 dev.off();
 
-
 COMPTD = array(0, dim = c(nrUnqCourses, nrUnqCourses, nrRemIDs) ); 	dimnames(COMPTD) = list(unqCourses, unqCourses, remIDs);
 
 EmptyComp = array(0, dim = c(nrUnqCourses, nrUnqCourses) ); 	rownames(EmptyComp) = unqCourses;  	colnames(EmptyComp)= unqCourses;
-
 
 # Build the the 3D-array of size  nrCourses x nrCourses x nrStudents
 for(stud in remIDs){
 	COMPTD[ ,,stud] = genMyComp(  listStud[[ stud ]] , EmptyComp );
 }
 print(dim( COMPTD ))
-
 
 COMP = apply(COMPTD, c(1,2), myRho)
 
@@ -125,15 +120,9 @@ readline('see by large row...');
 # return();
 }
 
-
-
 }
 
-
-
 getLen = function(x){ return(length(x)); }
-
-
 
 myRho = function(x){
 	# print(x);
@@ -152,12 +141,10 @@ myRho = function(x){
 	return(rho)
 }
 
-
 ones = function(nr_states_A, nr_states_B){
 x = array( 1, dim = c(nr_states_A, nr_states_B) ); return(x);	
 }
 
 eye = function(nr_states) {
-	
 	return( diag( ones(1,nr_states) ) );
 }
