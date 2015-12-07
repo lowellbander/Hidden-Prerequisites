@@ -38,8 +38,7 @@ nrRemIDs <- length(remIDs);
 COMPTD <- array(0, dim = c(nrUnqCourses, nrUnqCourses, nrRemIDs));
 dimnames(COMPTD) <- list(unqCourses, unqCourses, remIDs);
 EmptyComp <- array(0, dim = c(nrUnqCourses, nrUnqCourses));
-rownames(EmptyComp) <- unqCourses;
-colnames(EmptyComp) <- unqCourses;
+dimnames(EmptyComp) <- list(unqCourses, unqCourses);
 
 # Build the 3D-array of size nrCourses x nrCourses x nrStudents
 for(stud in remIDs){
