@@ -1,7 +1,7 @@
 # Lowell's attempt to copy and annotate the functionally necessary subset of Mihai's original code
 
 # a main function that does nearly everything and should perhaps be abstracted away.
-main <- function () {
+generateComparisonMatrixForGPA <- function (minGPA, maxGPA) {
   # this generates DF and listStud
   # DF is a mapping of ID's to GPA's. (there are several GPA's of 4.3 wtf)
   # listStud is a jagged mapping of ID's to course orderings.
@@ -17,19 +17,18 @@ main <- function () {
   DF$nrC <- DFNRC[rownames(DF), 'nrC']
 
   # generate a subset of DF with only A range students who have taken at least 7 math courses
-  myDescGrade <- 'A';
-  A <- subset(DF, GPA >= 3.7 & nrC >= 7);
-  remIDs <- as.character(A$ID);
+  relevantSubset <- subset(DF, GPA >= minGPA & GPA <= maxGPA & nrC >= 7);
+  remIDs <- as.character(relevantSubset$ID);
 
   # subsets listStud for desired GPA and nrc (?)
-  listStud <- listStud[remIDs];
+  #listStud <- listStud[remIDs];
 
   # generate requisite metadata:
   # * unqCourses, a sorted and unique list of all courses in the dataset
   # * nrUnqCourses, the number of unique courses in the data set (length of unqCourses)
   # * nrRemIDs, the number of students in the subset of students selected
   AllCourses <- NULL;
-  for( stud in remIDs){
+  for( stud in DF$ID){
     AllCourses <- c(AllCourses, listStud[[stud]]);
   }
   unqCourses <- sort(unique(AllCourses));
@@ -49,7 +48,7 @@ main <- function () {
 
   # normalize the COMPTD prism to a matrix
   normalized <- normalize(COMPTD, EmptyComp)
-  print(normalized);
+  #print(normalized);
 }
 
 normalize = function (prism, emptyComparisonMatrix) {
@@ -108,6 +107,14 @@ generateComparisonMatrix = function (courses, emptyComparisonMatrix) {
     }
   }
   return(C);
+}
+
+main = function () {
+  A = generateComparisonMatrixForGPA(3.7, 4.0);
+  C = generateComparisonMatrixForGPA(1.7, 2.3);
+  print(A-C);
+  print(dim(A))
+  print(dim(C))
 }
 
 main();
