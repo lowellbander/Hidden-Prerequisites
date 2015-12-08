@@ -17,7 +17,7 @@ generateComparisonMatrixForGPA <- function (minGPA, maxGPA) {
   DF$nrC <- DFNRC[rownames(DF), 'nrC']
 
   # generate a subset of DF with only A range students who have taken at least 7 math courses
-  relevantSubset <- subset(DF, GPA >= minGPA & GPA <= maxGPA & nrC >= 7);
+  relevantSubset <- subset(DF, GPA >= minGPA & GPA <= maxGPA & nrC >= 5);
   remIDs <- as.character(relevantSubset$ID);
 
   # subsets listStud for desired GPA and nrc (?)
@@ -74,19 +74,20 @@ normalize = function (prism, emptyComparisonMatrix) {
 
 serialRank = function(nmatrix) {
   names = colnames(nmatrix)
-  C = nmatrix
-  size = dim(nmatrix)
+  n<-dim(nmatrix)[1]
+  C = data.matrix(nmatrix)
+  
   diag(C) <- 1
   
-  S = matrix(data=NA, ncol=size[1], nrow=size[2]);
+  S = matrix(data=NA, ncol=n, nrow=n);
   
-  onesMatrix = matrix(data=1, nrow=size[1], ncol=size[2]);
-  S = (1/2)*(size[1]*(onesMatrix %*% t(onesMatrix)) + C %*% t(C));
+  onesMatrix = matrix(data=1, nrow=n, ncol=n);
+  S = (1/2)*(n*(onesMatrix) + (C %*% t(C)));
   
-  D = matrix(data=0, nrow=size[1], ncol=size[2]);
-  for (i in 1:size[1]) {
+  D = matrix(data=0, nrow=n, ncol=n);
+  for (i in 1:n) {
     sum = 0
-    for (j in 1:size[2]) {
+    for (j in 1:n) {
       sum = sum + S[i, j]
     }
     D[i,i] = sum
@@ -95,21 +96,20 @@ serialRank = function(nmatrix) {
   L = D - S;
   
   eigenL = eigen(L);
-  print (eigenL$vectors);
   nonzeroEigenvalue = eigenL$values[eigenL$values != 0];
   Fiedler = eigenL$vectors[,length(nonzeroEigenvalue)-1,drop=FALSE];
   sortedFiedler = sort(Fiedler)
   
-  final = matrix(data=0, nrow=size[1], ncol=1)
+  final = matrix(data=0, nrow=n, ncol=1)
   
-  for (i in 1:size[1]) {
-    for (j in 1:size[2]) {
+  for (i in 1:n) {
+    for (j in 1:n) {
       if (sortedFiedler[i] == Fiedler[j]) {
         final[i, 1] = names[j]
       }
     }
   }
-  print(final)
+  return(final)
 }
 
 compare = function (this, that, courses) {
@@ -149,11 +149,13 @@ generateComparisonMatrix = function (courses, emptyComparisonMatrix) {
 }
 
 main = function () {
-  A = generateComparisonMatrixForGPA(3.7, 4.0);
+  A = generateComparisonMatrixForGPA(3.7, 4.3);
   C = generateComparisonMatrixForGPA(1.7, 2.3);
+  print(serialRank(A))
+  print(serialRank(C))
   #print(A-C);
-  print(dim(A))
-  print(dim(C))
+  #print(dim(A))
+  #print(dim(C))
 }
 
 main();
