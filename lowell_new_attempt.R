@@ -21,14 +21,14 @@ generateComparisonMatrixForGPA <- function (minGPA, maxGPA) {
   remIDs <- as.character(relevantSubset$ID);
 
   # subsets listStud for desired GPA and nrc (?)
-  #listStud <- listStud[remIDs];
+  listStud <- listStud[remIDs];
 
   # generate requisite metadata:
   # * unqCourses, a sorted and unique list of all courses in the dataset
   # * nrUnqCourses, the number of unique courses in the data set (length of unqCourses)
   # * nrRemIDs, the number of students in the subset of students selected
   AllCourses <- NULL;
-  for( stud in DF$ID){
+  for( stud in remIDs){
     AllCourses <- c(AllCourses, listStud[[stud]]);
   }
   unqCourses <- sort(unique(AllCourses));
@@ -151,7 +151,7 @@ generateComparisonMatrix = function (courses, emptyComparisonMatrix) {
 main = function () {
   A = generateComparisonMatrixForGPA(3.7, 4.0);
   C = generateComparisonMatrixForGPA(1.7, 2.3);
-  print(A-C);
+  #print(A-C);
   print(dim(A))
   print(dim(C))
 }
