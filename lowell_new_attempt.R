@@ -148,12 +148,19 @@ generateComparisonMatrix = function (courses, emptyComparisonMatrix) {
   return(C);
 }
 
+matrixSubset = function (m, headers) {
+  columnsRemoved <- subset(m, select=headers);
+  rowsRemoved <- subset(t(columnsRemoved), select=headers);
+  return(t(rowsRemoved));
+}
+
 main = function () {
-  A = generateComparisonMatrixForGPA(3.7, 4.0);
-  C = generateComparisonMatrixForGPA(1.7, 2.3);
-  #print(A-C);
-  print(dim(A))
-  print(dim(C))
+  A <- generateComparisonMatrixForGPA(3.7, 4.0);
+  C <- generateComparisonMatrixForGPA(1.7, 2.3);
+  commonCourses <- intersect(rownames(A), rownames(C));
+  A_pruned <- matrixSubset(A, commonCourses);
+  C_pruned <- matrixSubset(C, commonCourses);
+  differenceMatrix <- A_pruned - C_pruned;
 }
 
 main();
