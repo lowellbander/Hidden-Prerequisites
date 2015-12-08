@@ -48,7 +48,6 @@ generateComparisonMatrixForGPA <- function (minGPA, maxGPA) {
 
   # normalize the COMPTD prism to a matrix
   normalized <- normalize(COMPTD, EmptyComp)
-  #print(normalized);
 }
 
 normalize = function (prism, emptyComparisonMatrix) {
@@ -71,6 +70,46 @@ normalize = function (prism, emptyComparisonMatrix) {
     }
   }
   return(normalized);
+}
+
+serialRank = function(nmatrix) {
+  names = colnames(nmatrix)
+  C = nmatrix
+  size = dim(nmatrix)
+  diag(C) <- 1
+  
+  S = matrix(data=NA, ncol=size[1], nrow=size[2]);
+  
+  onesMatrix = matrix(data=1, nrow=size[1], ncol=size[2]);
+  S = (1/2)*(size[1]*(onesMatrix %*% t(onesMatrix)) + C %*% t(C));
+  
+  D = matrix(data=0, nrow=size[1], ncol=size[2]);
+  for (i in 1:size[1]) {
+    sum = 0
+    for (j in 1:size[2]) {
+      sum = sum + S[i, j]
+    }
+    D[i,i] = sum
+  }
+  
+  L = D - S;
+  
+  eigenL = eigen(L);
+  print (eigenL$vectors);
+  nonzeroEigenvalue = eigenL$values[eigenL$values != 0];
+  Fiedler = eigenL$vectors[,length(nonzeroEigenvalue)-1,drop=FALSE];
+  sortedFiedler = sort(Fiedler)
+  
+  final = matrix(data=0, nrow=size[1], ncol=1)
+  
+  for (i in 1:size[1]) {
+    for (j in 1:size[2]) {
+      if (sortedFiedler[i] == Fiedler[j]) {
+        final[i, 1] = names[j]
+      }
+    }
+  }
+  print(final)
 }
 
 compare = function (this, that, courses) {
