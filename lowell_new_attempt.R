@@ -46,7 +46,32 @@ main <- function () {
   for(stud in remIDs){
     COMPTD[,,stud] <- generateComparisonMatrix(listStud[[stud]], EmptyComp);
   }
-  print(COMPTD);
+
+  # normalize the COMPTD prism to a matrix
+  normalized <- normalize(COMPTD, EmptyComp)
+  print(normalized);
+}
+
+normalize = function (prism, emptyComparisonMatrix) {
+  normalized <- emptyComparisonMatrix;
+  dimensions <- dim(prism)
+  for (i in 1:dimensions[1]) {
+    for (j in 1:dimensions[2]) {
+      values <- vector()
+      for (k in 1:dimensions[3]) {
+        if (prism[i,j,k] != 0) {
+          values <- c(values, prism[i,j,k])
+        }
+      }
+      mn <- mean(values);
+      if (is.nan(mn)) {
+        normalized[i,j] <- 0;
+      } else {
+        normalized[i,j] <- mn;
+      }
+    }
+  }
+  return(normalized);
 }
 
 compare = function (this, that, courses) {
