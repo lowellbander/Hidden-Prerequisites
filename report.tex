@@ -150,12 +150,36 @@ In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically ge
 \end{center}   
 \end{itemize}
 
-\textcolor{red}{This is how you color tex in red ...}
-
-\textcolor{blue}{This is how you color tex in blue ...}
-
 \section{Our work}    \label{sec:ourWork}
-Describe the bulk of your work in this section.
+%Describe the bulk of your work in this section.
+Our first steps in this endeavor involved acquisition of the data requisite to perform out analysis. Specifically, we sought to obtain, for several students, in both the Mathematics (Math) and Computer Science (CS) departments, over many years: (1) the order in which each student took their courses, and (2) their graduating GPA for the relevant department, either Math or CS.\\
+
+Our professor for this course, Mihai Cucuringu, had previously obtained the requisite dataset from the Math department and was kind enough to share this with us. Unfortunately, we were not successful in obtaining the corresponding dataset for the CS department before the due date of this project. This is not for lack of effort, for we approached members of the Registrar's office, the current and a former chair of the CS department, as well as the Office of Academic and Student Affairs for the School of Engineering and Applied Science (OASA SEAS).\\
+
+As mentioned in the abstract of our paper, we sought to implement various ranking algorithms to determine total orderings of courses as a method of validating existing prerequisites and potentially discovering hidden ones, courses that ought to be prerequisites but are not currently. Moreover, we sought to visualize the prerequisite relationship among courses by construction of a directed acyclic graph (DAG), wherein children nodes have parents as their prerequisites, and wherein the edge weights between nodes represents the confidence with which our data supports one course being a prerequisite for another course. \\
+
+As we began implementation of the Serial Rank algorithm we noted that an intermediate computation of the algorithm would prove very useful in the construction of the DAG described above. Namely, both share the need for a matrix $C$ containing pairwise comparisons, such that $C\in \{-1,0,1\}^{n\times n}$, where $n$ is the number of courses a student takes. The elements of $C$ are determined as follows:
+
+\begin{equation}
+C_{ij} = \left\{
+	\begin{array}{rl}
+ 1 & \text{ if course $i$ is taken before course $j$, (or $i=j$)} 	\\
+ &  \\
+ 0 & \text{ if $i$ and $j$ are tied, or the comparison is unavailable }	\\
+ &  \\
+ -1 & \text{ if course $j$ is taken before course $i$} 
+     \end{array}
+   \right.
+\label{myExpValue}
+\end{equation}
+
+
+% todo: 
+% * complete explanation of serial rank, as it pertains to our project
+% * necessity of increasing minimum courses to make believable rank
+% * finding a common subset for difference matrix, explain algorithm, perhaps code snippet
+% * lack of confidence given how few students over such a large time span end up being in our data set
+% * how the above results in a lot of noise, such that analyzing the comparison matrix wasn't illuminating.
 
 \section{Numerical experiments on synthetic data}  \label{sec:NumExpSyn}
 Present here the numerical results you obtain on a synthetically generated data set...
