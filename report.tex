@@ -1,0 +1,175 @@
+\documentclass[10pt]{siamltex}
+% siamltex     final
+\usepackage{amsmath,amssymb,epsfig}
+%\usepackage[]{graphicx,epsf,epsfig,amsmath,amssymb,amsfonts,latexsym,amsthm}
+% \usepackage{bbm}
+%\usepackage{amsfonts}
+%\usepackage{amsthm}
+%% \usepackage[a4paper]{geometry}
+%% \geometry{top=0.99in, bottom=0.995in, left=0.995in, right=0.995in}
+% \usepackage[top=20mm, bottom=18mm, left=15mm, right=18mm]{geometry}
+\usepackage[top=18mm, bottom=18mm, left=20mm, right=20mm]{geometry}
+
+\usepackage{hyperref}
+
+% \graphicspath{{/Users/Mihai/Google Drive/MATLAB/Ranking_Sync/PLOTS/}}
+% D:/LATEX/Reports@IIT/figures/
+\usepackage{graphicx}
+\usepackage[space]{grffile}
+
+\newcommand{\mb}[1]{\mbox{\boldmath$#1$}}
+
+\usepackage{lineno}
+\pagewiselinenumbers
+
+\usepackage{subfigure}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{array}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{url}
+% \usepackage{color}
+
+% \usepackage[toc,page]{appendix}
+
+%\usepackage[outer]{showlabels,rotating}
+%\renewcommand{\showlabelsetlabel}[1]
+%{\begin{turn}{0}\showlabelfont #1\end{turn}}
+%\showlabels{cite}
+%\showlabels{ref}
+%\showlabels{foo}
+%\renewcommand{\showlabelfont}{\small}
+
+\usepackage{setspace}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{hyperref}
+%\def\Acronimo{ANALYSISOFNETWORKS}
+% number the lines
+
+\newcommand{\myreferences}{../../../Postdocs_laptop/postdoc_bib_file}
+% \newcommand{\myreferences}{/Users/Mihai/test_bib_file}
+
+\usepackage{lineno}
+% \pagewiselinenumbers
+%\setlength\linenumbersep{8pt}
+
+% ANALYSISOFNETWORKS
+% AALGN
+\hypersetup{
+%    pdftitle={\Acronimo{}, FP7-PEOPLE-IIF-2012},    % title
+%    pdfauthor={Some Author},
+    colorlinks=true,
+    citecolor=red,
+    linkcolor=blue,
+    urlcolor=blue
+  }
+
+%
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{conjecture}[theorem]{Conjecture}
+%\newtheorem{corollary}[theorem]{Corollary}
+%\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newdef{definition}[theorem]{Definition}
+%\newdef{remark}[theorem]{Remark}
+\newcounter{ale}
+\newcommand{\abc}{\item[\alph{ale})]\stepcounter{ale}}
+\newenvironment{liste}{\begin{itemize}}{\end{itemize}}
+\newcommand{\aliste}{\begin{liste} \setcounter{ale}{1}}
+\newcommand{\zliste}{\end{liste}}
+\newenvironment{abcliste}{\aliste}{\zliste}
+
+% \usepackage[english]{datetime}
+
+\begin{document}
+
+\begin{pagewiselinenumbers}
+\title{MATH 191 Graphs and Networks \\ Research Project}
+\author{First~Author \footnotemark[1], Second~Author \footnotemark[2], Third~Author \footnotemark[1]  }
+\date{ \today}
+% \vspace{-10mm}
+\maketitle
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\footnotetext[1]{Department of Mathematics, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555, email: xyz@ucla.edu}
+\footnotetext[2]{Second Department, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555}
+%\renewcommand{\thefootnote}{\arabic{footnote}}
+
+\begin{center}
+     February 28, 2015
+%  DRAFT
+\end{center}
+
+% We propose novel approach to the
+\vspace{5mm}
+
+\begin{abstract}
+Abstract goes here. Provide 10-15 lines with a summary of your work.
+\end{abstract}
+
+\begin{keywords} A few keyword that best describe your work. For example:  network centrality, spectral algorithms, gravity models, vertex similarity, core periphery structure, directed graphs, local-to-global algorithms, multiple network alignment, clustering bipartite graphs, angular synchronization
+\end{keywords}
+
+\section{Introduction}
+
+This is the Introduction.
+
+\vspace{10mm}  % add white space whenever needed
+
+This is how you cite a reference paper  \cite{corePerOxford} or multiple ones  \cite{corePerOxford,puckmason}.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.46\columnwidth]{Directed_Core_Per}
+\end{center}
+\caption{This is how you add a plot to a Figure. It is always a good idea to add such a caption to each Figure, and explain what the figure is about. Also, if your plot has x and y axis, please always label your graphs (within MATLAB) so that your plots/results can be easily read and understood.}
+\label{fig:DirCorPer}
+\end{figure}
+
+This is how you cite a (labeled) section: In Section \ref{sec:relWork}, we describe the related work considered in \cite{puckmason}.
+%%
+In Section \ref{sec:ourWork} we ... 
+In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically generated data sets, while in Section \ref{sec:NumExpReal} we do so for a real data set. Finally, in Section  \ref{sec:conclusion} we conclude with a summary of our results, and discuss future possible research direction. 
+
+\section{Related work} \label{sec:relWork}
+
+\textbf{Questions/Comments/Things that could be done}
+\begin{itemize}
+\item What is a good notion of core-periphery structure in directed networks? Would the null model shown in Figure \ref{fig:DirCorPer} be a good model?
+\item Can one build on or expand some of the above methods and apply them to directed networks? 
+\item As a starting point, perhaps apply simulated annealing to the objective function induced by the above null model
+\item Apply this to a real network, a good such example might be the migration network between counties in the United States, which we have seen in class in the past.
+\item This is how you add an url link 
+ \begin{center}
+   \url{http://people.maths.ox.ac.uk/porterm/papers/prestige_final.pdf} 
+\end{center}   
+\end{itemize}
+
+\textcolor{red}{This is how you color tex in red ...}
+
+\textcolor{blue}{This is how you color tex in blue ...}
+
+\section{Our work}    \label{sec:ourWork}
+Describe the bulk of your work in this section.
+
+\section{Numerical experiments on synthetic data}  \label{sec:NumExpSyn}
+Present here the numerical results you obtain on a synthetically generated data set...
+
+\section{Numerical experiments on real data}   \label{sec:NumExpReal}
+Present here the numerical results you obtain on a real data set...
+
+\section{Summary and conclusion}  \label{sec:conclusion}
+Summarize your work in this section.
+
+\bibliographystyle{siam}
+\bibliography{project_math191}
+
+\end{pagewiselinenumbers}
+
+\end{document}
