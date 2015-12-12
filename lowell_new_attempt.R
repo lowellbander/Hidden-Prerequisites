@@ -154,6 +154,37 @@ matrixSubset = function (m, headers) {
   return(t(rowsRemoved));
 }
 
+# computes the [normalized] kendall distance for two orderings
+# firstOrdering is assumed to be a permutation of secondOrdering
+kendall = function (firstOrdering, secondOrdering, normalize = FALSE) {
+  nDisagreements <- 0;
+  len <- length(firstOrdering);
+  
+  # for all pairs of courses
+  for (i in 1:len) {
+    for (j in i:len) {
+      thisElement <- firstOrdering[i];
+      thatElement <- firstOrdering[j];
+      
+      thisPositionFirstOrdering <- match(thisElement, firstOrdering);
+      thatPositionFirstOrdering <- match(thatElement, firstOrdering);
+      thisPositionSecondOrdering <- match(thisElement, secondOrdering);
+      thatPositionSecondOrdering <- match(thatElement, secondOrdering);
+      
+      if ((thisPositionFirstOrdering < thatPositionFirstOrdering & thisPositionSecondOrdering > thatPositionSecondOrdering)
+          | (thisPositionFirstOrdering > thatPositionFirstOrdering & thisPositionSecondOrdering < thatPositionSecondOrdering)) {
+        nDisagreements <- nDisagreements + 1;
+      }
+    }
+  }
+  
+  if (normalize) {
+    nDisagreements <- nDisagreements/(len*(len-1)/2);
+  }
+  
+  return(nDisagreements);
+}
+
 main = function () {
   A <- generateComparisonMatrixForGPA(3.7, 4.0);
   C <- generateComparisonMatrixForGPA(1.7, 2.3);
@@ -161,6 +192,8 @@ main = function () {
   A_pruned <- matrixSubset(A, commonCourses);
   C_pruned <- matrixSubset(C, commonCourses);
   differenceMatrix <- A_pruned - C_pruned;
+  
+  print(kendall(serialRank(A_pruned), serialRank(C_pruned), TRUE));
 }
 
 main();
