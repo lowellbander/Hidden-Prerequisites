@@ -127,7 +127,7 @@ compare = function (this, that, courses) {
 
 # courses: a list of unique strings. e.g.,  ["10A", "32B",  "33A", ...]
 # emptyComparisonMatrix: an empty comparison matrix to fill
-generateComparisonMatrix = function (courses, emptyComparisonMatrix) {
+generateComparisonMatrix = function (courses, emptyComparisonMatrix, forSerialRank=TRUE) {
 
   # Our comparison matrix, C, initialized to empty.
   C <- emptyComparisonMatrix;
@@ -141,7 +141,12 @@ generateComparisonMatrix = function (courses, emptyComparisonMatrix) {
       if (i == j) {
         C[i,j] <- 1;
       } else {
-        C[i,j] <- compare(cols[i], rows[j], courses);
+        comparison <- compare(cols[i], rows[j], courses);
+        if (!forSerialRank & comparison == -1) {
+          comparison <- 0;
+        }
+        C[i,j] <- comparison;
+        #C[i,j] <- compare(cols[i], rows[j], courses);
       }
     }
   }
