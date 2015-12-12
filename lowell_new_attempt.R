@@ -1,7 +1,7 @@
 # Lowell's attempt to copy and annotate the functionally necessary subset of Mihai's original code
 
 # a main function that does nearly everything and should perhaps be abstracted away.
-generateComparisonMatrixForGPA <- function (minGPA, maxGPA) {
+generateComparisonMatrixForGPA <- function (minGPA, maxGPA, forSerialRank = TRUE, reducer = normalize) {
   # this generates DF and listStud
   # DF is a mapping of ID's to GPA's. (there are several GPA's of 4.3 wtf)
   # listStud is a jagged mapping of ID's to course orderings.
@@ -43,11 +43,11 @@ generateComparisonMatrixForGPA <- function (minGPA, maxGPA) {
 
   # Build the 3D-array of size nrCourses x nrCourses x nrStudents
   for(stud in remIDs){
-    COMPTD[,,stud] <- generateComparisonMatrix(listStud[[stud]], EmptyComp);
+    COMPTD[,,stud] <- generateComparisonMatrix(listStud[[stud]], EmptyComp, forSerialRank);
   }
 
   # normalize the COMPTD prism to a matrix
-  normalized <- normalize(COMPTD, EmptyComp)
+  return(reducer(COMPTD, EmptyComp));
 }
 
 normalize = function (prism, emptyComparisonMatrix) {
@@ -70,6 +70,23 @@ normalize = function (prism, emptyComparisonMatrix) {
     }
   }
   return(normalized);
+}
+
+flatten = function (prism, emptyComparisonMatrix) {
+  flattened <- emptyComparisonMatrix;
+  dimensions <- dim(prism)
+  for (i in 1:dimensions[1]) {
+    for (j in 1:dimensions[2]) {
+      values <- vector()
+      for (k in 1:dimensions[3]) {
+        if (prism[i,j,k] != 0) {
+          values <- c(values, prism[i,j,k])
+        }
+      }
+      flattened[i,j] <- sum(values);
+    }
+  }
+  return(flattened);
 }
 
 serialRank = function(nmatrix) {
@@ -139,14 +156,17 @@ generateComparisonMatrix = function (courses, emptyComparisonMatrix, forSerialRa
   for (i in 1:n) {
     for (j in 1:n) {
       if (i == j) {
-        C[i,j] <- 1;
+        if (forSerialRank) {
+          C[i,j] <- 1;
+        } else {
+          C[i,j] <- 0;
+        }
       } else {
         comparison <- compare(cols[i], rows[j], courses);
         if (!forSerialRank & comparison == -1) {
           comparison <- 0;
         }
         C[i,j] <- comparison;
-        #C[i,j] <- compare(cols[i], rows[j], courses);
       }
     }
   }
@@ -198,7 +218,9 @@ main = function () {
   C_pruned <- matrixSubset(C, commonCourses);
   differenceMatrix <- A_pruned - C_pruned;
   
-  print(kendall(serialRank(A_pruned), serialRank(C_pruned), TRUE));
+  k <- kendall(serialRank(A_pruned), serialRank(C_pruned), TRUE);
+  
+  a <- generateComparisonMatrixForGPA(3.7, 4.0, forSerialRank = FALSE, reducer = flatten);
 }
 
 main();
