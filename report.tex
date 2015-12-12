@@ -88,6 +88,12 @@
 
 % \usepackage[english]{datetime}
 
+\def\P(#1){\Phelper#1|\relax\Pchoice(#1)}
+\def\Phelper#1|#2\relax{\ifx\relax#2\relax\def\Pchoice{\Pone}\else\def\Pchoice{\Ptwo}\fi}
+\def\Pone(#1){\Pr\left( #1 \right)}
+\def\Ptwo(#1|#2){\Pr\left( #1 \mid #2 \right)}
+\def\Pr{\mathbf{Pr}}
+
 \begin{document}
 
 \begin{pagewiselinenumbers}
@@ -125,7 +131,7 @@ This is how you cite a reference paper  \cite{corePerOxford} or multiple ones  \
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=0.46\columnwidth]{Directed_Core_Per}
+%\includegraphics[width=0.46\columnwidth]{Directed_Core_Per}
 \end{center}
 \caption{This is how you add a plot to a Figure. It is always a good idea to add such a caption to each Figure, and explain what the figure is about. Also, if your plot has x and y axis, please always label your graphs (within MATLAB) so that your plots/results can be easily read and understood.}
 \label{fig:DirCorPer}
@@ -170,7 +176,7 @@ C_{ij} = \left\{
  -1 & \text{ if course $j$ is taken before course $i$} 
      \end{array}
    \right.
-\label{myExpValue}
+\label{comparisonMatrix}
 \end{equation}
 
 
@@ -182,6 +188,40 @@ C_{ij} = \left\{
 % * how the above results in a lot of noise, such that analyzing the comparison matrix wasn't illuminating.
 % * kendall tau distance, perhaps with incrementing GPA successively by 0.1
 % * compare our kendal distance algorithm to the inbuilt one
+
+\subsection{Rank Centrality}
+
+Objective: Implement and use the Rank Centrality algorithm on our dataset to compute another ranking for course orderings taken by students in different GPA ranges. 
+
+The Rank Centrality algorithm takes in as input a graph $G([n],E,A)$ and outputs a stationary distribution $\{\pi(i)\}_{i\in [n]}$ assigning numerical scores to each node.
+
+To do this, we must first compute a matrix $a_{ij}$ where each $ij^{th}$ entry represents the number of times the $j^{th}$ element is preferred to the $i^{th}$ element. In our case this is the number of students who have taken class j before class i. We then create a new normalized matrix $A_{ij} = \frac{a_{ij}}{a_{ij} + a_{ji}}$. If there is no comparison, we set $A_{ij} = 0$. We use $A_{ij}$ to create a Probability matrix $P$ representing the time-dependent likely-hood of a random walk from i to j.
+$$P_{ij} =  \P (x_{t+1}=j|x_{j}=i))$$
+
+To calculate $P_{ij}$ using the $A$ matrix, we set $d_{max} =\text{maximum out degree of a node}$ and use $d_{max}$ to ensure that the $\sum_{i,j}P_{ij} = 1$.
+\begin{equation}
+P_{ij} = \left\{
+	\begin{array}{rl}
+\frac{A_{ij}}{d_{max}}  & \text{ if }i\neq j 	\\
+ &  \\
+ 1 - \frac{1}{d_{max}}(\sum_{k\neq i}A_{ij})  & \text{ if }i = j 
+     \end{array}
+   \right.
+\label{probabilityMatrix}
+\end{equation}
+
+We then start with an arbitrary initial assignment $p_{0}$ of elements (classes in our case) to scores and apply recursively apply $P$ to the assignment until the assignment of elements to scores converges to some $\pi(i)$. 
+
+So, we have
+
+$$p_{t}(i) = \P(X_{t}=i) \text{ and } p_{0}= (p_{i}) \in \mathbb{R}_{+}^n \text{ is an abitrary distribution on [n].}$$
+then
+$$ p_{t+1}^{T} = p_{t}^{T}P $$ and $$ \pi = \lim_{t\rightarrow \infty} p_{t} $$  
+
+$\pi$ can also be computed by taking the top left eigenvector of $P$. 
+
+For our work, we will simply compute the $P$ matrix and then take its top left eigenvector which will denote the ranking of courses.
+
 
 \section{Numerical experiments on synthetic data}  \label{sec:NumExpSyn}
 Present here the numerical results you obtain on a synthetically generated data set...
