@@ -210,6 +210,24 @@ kendall = function (firstOrdering, secondOrdering, normalize = FALSE) {
   return(nDisagreements);
 }
 
+from_a_to_A = function (a) {
+  A <- a;
+  len <- dim(A)[1];
+  
+  for (i in 1:len) {
+    for (j in 1:len) {
+      denominator <- (a[i,j] + a[j,i]);
+      if (denominator == 0) {
+        A[i,j] <- 0;
+      } else {
+        A[i,j] <- a[i,j] / denominator;
+      }
+    }
+  }
+  
+  return(A);
+}
+
 main = function () {
   A <- generateComparisonMatrixForGPA(3.7, 4.0);
   C <- generateComparisonMatrixForGPA(1.7, 2.3);
@@ -221,6 +239,8 @@ main = function () {
   k <- kendall(serialRank(A_pruned), serialRank(C_pruned), TRUE);
   
   a <- generateComparisonMatrixForGPA(3.7, 4.0, forSerialRank = FALSE, reducer = flatten);
+  
+  A <- from_a_to_A(a);
 }
 
 main();
