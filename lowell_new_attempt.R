@@ -1,6 +1,5 @@
-# Lowell's attempt to copy and annotate the functionally necessary subset of Mihai's original code
 
-# a main function that does nearly everything and should perhaps be abstracted away.
+# generates comparison matrix for Serial Rank, Rank Centrality, and Least Squares algorithms
 generateComparisonMatrixForGPA <- function (minGPA, maxGPA, forSerialRank = TRUE, reducer = normalize) {
   # this generates DF and listStud
   # DF is a mapping of ID's to GPA's. (there are several GPA's of 4.3 wtf)
@@ -13,14 +12,14 @@ generateComparisonMatrixForGPA <- function (minGPA, maxGPA, forSerialRank = TRUE
   # creates a mapping of ID's to the number of courses taken by the student with that ID
   nrCoursesStud = sapply(listStud, length);
   DFNRC <- data.frame(nrC = nrCoursesStud);
-  rownames(DFNRC) <- names(listStud); # why is this necessary?
+  rownames(DFNRC) <- names(listStud);
   DF$nrC <- DFNRC[rownames(DF), 'nrC']
 
   # generate a subset of DF with only A range students who have taken at least 7 math courses
   relevantSubset <- subset(DF, GPA >= minGPA & GPA <= maxGPA & nrC >= 5);
   remIDs <- as.character(relevantSubset$ID);
 
-  # subsets listStud for desired GPA and nrc (?)
+  # subsets listStud for desired GPA and nrc
   listStud <- listStud[remIDs];
 
   # generate requisite metadata:
@@ -126,14 +125,15 @@ serialRank = function(nmatrix) {
       }
     }
   }
-  return(final)
+  return(as.vector(final));
 }
 
-rankCentrality = function(nmatrix) { 
+rankCentrality = function(nmatrix) {
+  diag(nmatrix) <- 0
   names = colnames(nmatrix)
   n<-dim(nmatrix)[1]
   A <- data.matrix(nmatrix) # Aij = the number of times j occurs before i
-  #dmaxx = (dim(A)[1] - 1)  #not sure if this should be the max of a particular node of or of all nodes
+  #dmax = (dim(A)[1] - 1)  #not sure if this should be the max of a particular node of or of all nodes
                           #assuming I can just use the dim - 1
   
   dmax = matrix(data=0, nrow=n, ncol=1)
@@ -182,10 +182,10 @@ rankCentrality = function(nmatrix) {
 
   #we need the top left eigenvector, not sure if this is right
   P_eigen <- eigen(t(P))#left eigenvectors
-  nonzeroEigenvalue = P_eigen$values[P_eigen$values != 0];
+  nonzeroEigenvalue = P_eigen$values[20];
   
-  P_TopLeftEigenvector = P_eigen$vectors[,length(nonzeroEigenvalue)]
- # P_eigenright <- eigen(P) right eigenvectors
+  P_TopLeftEigenvector = P_eigen$vectors[,20]
+
   
   sortedP_LeftEigenVector = sort(P_TopLeftEigenvector)
   
@@ -198,7 +198,6 @@ rankCentrality = function(nmatrix) {
       }
     }
   }
-  return(final)
 }
 
 compare = function (this, that, courses) {
@@ -293,12 +292,12 @@ leastSquaresRanking = function(preferenceMatrix) {
     while (j <= n) {
       y[k] <- abs(preferenceMatrix[i, j] - preferenceMatrix[j, i])
       if (preferenceMatrix[i, j] >= preferenceMatrix[j, i]) {
-        X[k, i] <- 1
-        X[k, j] <- -1
-      }
-      else {
         X[k, i] <- -1
         X[k, j] <- 1
+      }
+      else {
+        X[k, i] <- 1
+        X[k, j] <- -1
       }
       k <- k+1
       j <- j+1
@@ -313,7 +312,7 @@ leastSquaresRanking = function(preferenceMatrix) {
   }
   y[n] <- 0
   r = solve(XTX, XTy)
-  return(r[order(-r), , drop=FALSE])
+  return(rownames(r[order(-r), , drop=FALSE]));
 }
 
 from_a_to_A = function (a) {
@@ -343,11 +342,35 @@ main = function () {
   
   k <- kendall(serialRank(A_pruned), serialRank(C_pruned));
   
-  a <- generateComparisonMatrixForGPA(3.7, 4.0, forSerialRank = FALSE, reducer = flatten);
+  a <- generateComparisonMatrixForGPA(1.7, 2.3, forSerialRank = FALSE, reducer = flatten);
   LSR = leastSquaresRanking(a)
   print(LSR)
   A <- from_a_to_A(a);
 }
 
+#main();
 
-main();
+doSynthetic = function () {
+  courses <- c("33A", "33B", "115A", "164");
+  C <- data.frame(a = 1:4, b = 5:8, c = 3:4, d = 6:9);
+  rownames(C) <- colnames(C) <- courses;
+  
+  # serial rank
+  sr <- serialRank(C);
+  
+  # rank centrality
+  rc <- rankCentrality(C);
+  
+  # least squares
+  ls <- leastSquaresRanking(C);
+  
+  kendall(sr, rc);
+  kendall(sr, ls);
+  kendall(rc, ls);
+}
+
+doReal = function () {
+  # TODO  
+}
+
+doSynthetic();
