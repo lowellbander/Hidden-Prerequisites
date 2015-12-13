@@ -221,12 +221,12 @@ leastSquaresRanking = function(preferenceMatrix) {
     while (j <= n) {
       y[k] <- abs(preferenceMatrix[i, j] - preferenceMatrix[j, i])
       if (preferenceMatrix[i, j] >= preferenceMatrix[j, i]) {
-        X[k, i] <- 1
-        X[k, j] <- -1
-      }
-      else {
         X[k, i] <- -1
         X[k, j] <- 1
+      }
+      else {
+        X[k, i] <- 1
+        X[k, j] <- -1
       }
       k <- k+1
       j <- j+1
@@ -271,7 +271,7 @@ main = function () {
   
   k <- kendall(serialRank(A_pruned), serialRank(C_pruned), TRUE);
   
-  a <- generateComparisonMatrixForGPA(3.7, 4.0, forSerialRank = FALSE, reducer = flatten);
+  a <- generateComparisonMatrixForGPA(1.7, 2.3, forSerialRank = FALSE, reducer = flatten);
   LSR = leastSquaresRanking(a)
   print(LSR)
   A <- from_a_to_A(a);
