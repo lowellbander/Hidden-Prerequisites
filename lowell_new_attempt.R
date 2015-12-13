@@ -129,6 +129,43 @@ serialRank = function(nmatrix) {
   return(final)
 }
 
+rankCentrality = function(nmatrix) {
+  diag(nmatrix) <- 0
+  names = colnames(nmatrix)
+  n<-dim(nmatrix)[1]
+  A <- data.matrix(nmatrix) # Aij = the number of times j occurs before i
+  dmax = (dim(A)[1] - 1)  #not sure if this should be the max of a particular node of or of all nodes
+                          #assuming I can just use the dim - 1
+  
+  P <- (1/dmax) * A
+  for (i in 1:dim(P)[1]) {
+    P[i,i] = 1 - sum(P[i,]);
+  }
+  
+  #we need the top left eigenvector, not sure if this is right
+  P_eigen <- eigen(t(P))#left eigenvectors
+  nonzeroEigenvalue = P_eigen$values[20];
+  
+  P_TopLeftEigenvector = P_eigen$vectors[,20]
+
+  
+  sortedP_LeftEigenVector = sort(P_TopLeftEigenvector)
+  
+  final = matrix(data=0, nrow=n, ncol=1)
+  
+  for (i in 1:n) {
+    for (j in 1:n) {
+      if (sortedP_LeftEigenVector[i] == P_TopLeftEigenvector[j]) {
+        final[i, 1] = names[j]
+      }
+    }
+  }
+  
+  print(final)
+  
+  return(final)
+}
+
 compare = function (this, that, courses) {
   thisPosition <- match(this, courses);
   thatPosition <- match(that, courses);
@@ -181,7 +218,7 @@ matrixSubset = function (m, headers) {
 
 # computes the [normalized] kendall distance for two orderings
 # firstOrdering is assumed to be a permutation of secondOrdering
-kendall = function (firstOrdering, secondOrdering, normalize = FALSE) {
+kendall = function (firstOrdering, secondOrdering, normalize = TRUE) {
   nDisagreements <- 0;
   len <- length(firstOrdering);
   
@@ -269,7 +306,7 @@ main = function () {
   C_pruned <- matrixSubset(C, commonCourses);
   differenceMatrix <- A_pruned - C_pruned;
   
-  k <- kendall(serialRank(A_pruned), serialRank(C_pruned), TRUE);
+  k <- kendall(serialRank(A_pruned), serialRank(C_pruned));
   
   a <- generateComparisonMatrixForGPA(1.7, 2.3, forSerialRank = FALSE, reducer = flatten);
   LSR = leastSquaresRanking(a)
