@@ -118,7 +118,7 @@ We sought to use historical student data to discover/validate the prerequisite c
 \end{abstract}
 
 \begin{keywords} %A few keyword that best describe your work. For example:  network centrality, spectral algorithms, gravity models, vertex similarity, core periphery structure, directed graphs, local-to-global algorithms, multiple network alignment, clustering bipartite graphs, angular synchronization
-serial rank, rank centrality, prerequisites, least squares
+serial rank, rank centrality, prerequisites, least squares, kendall tau distance
 \end{keywords}
 
 \section{Introduction}
@@ -158,12 +158,14 @@ In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically ge
 
 \section{Our work}    \label{sec:ourWork}
 %Describe the bulk of your work in this section.
+\subsection{Getting Started}
 Our first steps in this endeavor involved acquisition of the data requisite to perform out analysis. Specifically, we sought to obtain, for several students, in both the Mathematics (Math) and Computer Science (CS) departments, over many years: (1) the order in which each student took their courses, and (2) their graduating GPA for the relevant department, either Math or CS.\\
 
 Our professor for this course, Mihai Cucuringu, had previously obtained the requisite dataset from the Math department and was kind enough to share this with us. Unfortunately, we were not successful in obtaining the corresponding dataset for the CS department before the due date of this project. This is not for lack of effort, for we approached members of the Registrar's office, the current and a former chair of the CS department, as well as the Office of Academic and Student Affairs for the School of Engineering and Applied Science (OASA SEAS).\\
 
 As mentioned in the abstract of our paper, we sought to implement various ranking algorithms to determine total orderings of courses as a method of validating existing prerequisites and potentially discovering hidden ones, courses that ought to be prerequisites but are not currently. Moreover, we sought to visualize the prerequisite relationship among courses by construction of a directed acyclic graph (DAG), wherein children nodes have parents as their prerequisites, and wherein the edge weights between nodes represents the confidence with which our data supports one course being a prerequisite for another course. \\
 
+\subsection{Serial Rank}
 As we began implementation of the Serial Rank algorithm we noted that an intermediate computation of the algorithm would prove very useful in the construction of the DAG described above. Namely, both share the need for a matrix $C$ containing pairwise comparisons, such that $C\in \{-1,0,1\}^{n\times n}$, where $n$ is the number of courses a student takes. The elements of $C$ are determined as follows:
 
 \begin{equation}
@@ -188,6 +190,9 @@ C_{ij} = \left\{
 % * how the above results in a lot of noise, such that analyzing the comparison matrix wasn't illuminating.
 % * kendall tau distance, perhaps with incrementing GPA successively by 0.1
 % * compare our kendal distance algorithm to the inbuilt one
+
+\subsection{DAG Construction}
+As mentioned above, we sought to create a DAG to visualize the prerequisite relationship between courses. To do this, we used the same $C$ matrix as for the Serial Rank algorithm, and computed it for both A ranked (GPA between 3.7 and 4.0) and C ranked (GPA between 1.7 and 2.3) students. We then found the difference of these two matrices, and examined entries which had large values, because these would suggest that taking 
 
 \subsection{Rank Centrality}
 
@@ -222,6 +227,7 @@ $\pi$ can also be computed by taking the top left eigenvector of $P$.
 
 For our work, we will simply compute the $P$ matrix and then take its top left eigenvector which will denote the ranking of courses.
 
+\subsection{Kendall Tau Distance}
 
 \section{Numerical experiments on synthetic data}  \label{sec:NumExpSyn}
 Present here the numerical results you obtain on a synthetically generated data set...
