@@ -129,6 +129,21 @@ serialRank = function(nmatrix) {
   return(final)
 }
 
+rankCentrality = function(nmatrix) { 
+  A <- data.matrix(nmatrix) # Aij = the number of times j occurs before i
+  dmax = (dim(A)[1] - 1)  #not sure if this should be the max of a particular node of or of all nodes
+                          #assuming I can just use the dim - 1
+  
+  P = (1/dmax) * A
+  for (i in 1:dim(P)[1]) {
+    P[i,i] = 1 - sum(P[i,]);
+  }
+  
+  #we need the top left eigenvector, not sure if this is right
+  P_eigen <- eigen(t(P)) #left eigenvectors
+ # P_eigenright <- eigen(P) right eigenvectors
+}
+
 compare = function (this, that, courses) {
   thisPosition <- match(this, courses);
   thatPosition <- match(that, courses);
