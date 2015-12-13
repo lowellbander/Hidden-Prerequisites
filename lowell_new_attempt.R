@@ -133,14 +133,53 @@ rankCentrality = function(nmatrix) {
   names = colnames(nmatrix)
   n<-dim(nmatrix)[1]
   A <- data.matrix(nmatrix) # Aij = the number of times j occurs before i
-  dmax = (dim(A)[1] - 1)  #not sure if this should be the max of a particular node of or of all nodes
+  #dmaxx = (dim(A)[1] - 1)  #not sure if this should be the max of a particular node of or of all nodes
                           #assuming I can just use the dim - 1
   
-  P <- (1/dmax) * A
-  for (i in 1:dim(P)[1]) {
-    P[i,i] = 1 - sum(P[i,]);
+  dmax = matrix(data=0, nrow=n, ncol=1)
+  rowoutdegree = matrix(data=0, nrow=n, ncol=1)
+  coloutdegree = matrix(data=0, nrow=n, ncol=1)
+
+  for (i in 1:n){ # get row out degree
+    count = 0
+    for (j in 1:n){
+      if (A[i,j] != 0){
+        count = count+1
+      }
+    }
+    rowoutdegree[i,1] = count-1
+  }
+  for (i in 1:n){ #get col out degree
+    count = 0
+    for (j in 1:n){
+      if (A[j,i] != 0){
+        count = count+1
+      }
+    }
+    coloutdegree[i,1] = count-1
   }
   
+  for (i in 1:n){ #get dmax
+    dmax[i,1] = max(rowoutdegree[i,1],coloutdegree[i,1])
+  }
+  
+  Pmat = matrix(data=0, nrow=n, ncol=n)
+  rownames(Pmat) = names
+  colnames(Pmat) = names
+  P <- data.matrix(Pmat)
+  
+  for (i in 1:n){  #divide everything by dmax
+    for (j in 1:n){
+    P[i,j] <- A[i,j] / dmax[i,1]
+    }
+  }
+  
+  #P <- (1/dmax) * A
+  for (j in 1:n) {
+    P[j,j] <- 1 - sum(P[,j]);
+  }
+  
+
   #we need the top left eigenvector, not sure if this is right
   P_eigen <- eigen(t(P))#left eigenvectors
   nonzeroEigenvalue = P_eigen$values[P_eigen$values != 0];
@@ -152,14 +191,13 @@ rankCentrality = function(nmatrix) {
   
   final = matrix(data=0, nrow=n, ncol=1)
   
-  for (i in 1:n) {
+  for (i in 1:n) { #just sorting the eigenvector and assign
     for (j in 1:n) {
       if (sortedP_LeftEigenVector[i] == P_TopLeftEigenvector[j]) {
         final[i, 1] = names[j]
       }
     }
   }
-  
   return(final)
 }
 
