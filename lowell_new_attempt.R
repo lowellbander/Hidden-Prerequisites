@@ -219,8 +219,9 @@ kendall = function (firstOrdering, secondOrdering, normalize = TRUE) {
   len <- length(firstOrdering);
   
   # for all pairs of courses
-  for (i in 1:len) {
-    for (j in i:len) {
+  for (i in 1:(len-1)) {
+    for (j in (i+1):len) {
+      
       thisElement <- firstOrdering[i];
       thatElement <- firstOrdering[j];
       
@@ -229,8 +230,13 @@ kendall = function (firstOrdering, secondOrdering, normalize = TRUE) {
       thisPositionSecondOrdering <- match(thisElement, secondOrdering);
       thatPositionSecondOrdering <- match(thatElement, secondOrdering);
       
-      if ((thisPositionFirstOrdering < thatPositionFirstOrdering & thisPositionSecondOrdering > thatPositionSecondOrdering)
-          | (thisPositionFirstOrdering > thatPositionFirstOrdering & thisPositionSecondOrdering < thatPositionSecondOrdering)) {
+      a <- thisPositionFirstOrdering < thatPositionFirstOrdering;
+      b <- thisPositionSecondOrdering > thatPositionSecondOrdering;
+      c <- thisPositionFirstOrdering > thatPositionFirstOrdering;
+      d <- thisPositionSecondOrdering < thatPositionSecondOrdering;
+      
+      if ((a & b)
+          | (c & d)) {
         nDisagreements <- nDisagreements + 1;
       }
     }
@@ -313,6 +319,8 @@ main = function () {
 #main();
 
 doSynthetic = function () {
+  
+  # create synthetic comparison matrix
   courses <- c("33A", "33B", "115A", "164");
   C <- data.frame(a = 1:4, b = 5:8, c = 3:4, d = 6:9);
   rownames(C) <- colnames(C) <- courses;
@@ -326,13 +334,51 @@ doSynthetic = function () {
   # least squares
   ls <- leastSquaresRanking(C);
   
+  sr; rc; ls;
+  
   kendall(sr, rc);
   kendall(sr, ls);
   kendall(rc, ls);
 }
 
 doReal = function () {
-  # TODO  
+  
+  # compute rankings and requisite intermediate comparison matrices for A range students
+  
+  a_A <- generateComparisonMatrixForGPA(3.7, 4.0, forSerialRank = FALSE, reducer = flatten);
+  LS_A <- leastSquaresRanking(a_A)
+  
+  A_A <- from_a_to_A(a_A);
+  RC_A <- rankCentrality(A_A);
+  
+  C_A <- generateComparisonMatrixForGPA(3.7, 4.0, forSerialRank = TRUE, reducer = normalize);
+  SR_A <- serialRank(C_A);
+  
+  # compute rankings and requisite intermediate comparison matrices for C range students
+  
+  a_C <- generateComparisonMatrixForGPA(1.7, 2.3, forSerialRank = FALSE, reducer = flatten);
+  LS_C <- leastSquaresRanking(a_C)
+  
+  A_C <- from_a_to_A(a_C);
+  RC_C <- rankCentrality(A_C);
+  
+  C_C <- generateComparisonMatrixForGPA(1.7, 2.3, forSerialRank = TRUE, reducer = normalize);
+  SR_C <- serialRank(C_C);
+  
+  # compute kendall tau distances between each of the three rankings, by GPA bucket
+  
+  # for A bucket
+  kendall_ls_sr_A <- kendall(LS_A, SR_A);
+  # kendall_ls_rc_A <- kendall(LS_A, RC_A); # was causing problems
+  kendall_rc_sr_A <- kendall(RC_A, SR_A);
+  
+  # for C bucket
+  kendall_ls_sr_A <- kendall(LS_C, SR_C);
+  kendall_ls_rc_A <- kendall(LS_C, RC_C);
+  kendall_rc_sr_A <- kendall(RC_C, SR_C);
+  
 }
 
-doSynthetic();
+#doSynthetic();
+
+doReal();
