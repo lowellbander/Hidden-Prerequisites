@@ -1,6 +1,5 @@
-# Lowell's attempt to copy and annotate the functionally necessary subset of Mihai's original code
 
-# a main function that does nearly everything and should perhaps be abstracted away.
+# generates comparison matrix for Serial Rank, Rank Centrality, and Least Squares algorithms
 generateComparisonMatrixForGPA <- function (minGPA, maxGPA, forSerialRank = TRUE, reducer = normalize) {
   # this generates DF and listStud
   # DF is a mapping of ID's to GPA's. (there are several GPA's of 4.3 wtf)
@@ -13,14 +12,14 @@ generateComparisonMatrixForGPA <- function (minGPA, maxGPA, forSerialRank = TRUE
   # creates a mapping of ID's to the number of courses taken by the student with that ID
   nrCoursesStud = sapply(listStud, length);
   DFNRC <- data.frame(nrC = nrCoursesStud);
-  rownames(DFNRC) <- names(listStud); # why is this necessary?
+  rownames(DFNRC) <- names(listStud);
   DF$nrC <- DFNRC[rownames(DF), 'nrC']
 
   # generate a subset of DF with only A range students who have taken at least 7 math courses
   relevantSubset <- subset(DF, GPA >= minGPA & GPA <= maxGPA & nrC >= 5);
   remIDs <- as.character(relevantSubset$ID);
 
-  # subsets listStud for desired GPA and nrc (?)
+  # subsets listStud for desired GPA and nrc
   listStud <- listStud[remIDs];
 
   # generate requisite metadata:
@@ -126,7 +125,7 @@ serialRank = function(nmatrix) {
       }
     }
   }
-  return(final)
+  return(as.vector(final));
 }
 
 rankCentrality = function(nmatrix) { 
@@ -160,7 +159,7 @@ rankCentrality = function(nmatrix) {
     }
   }
   
-  return(final)
+  return(as.vector(final));
 }
 
 compare = function (this, that, courses) {
@@ -275,7 +274,7 @@ leastSquaresRanking = function(preferenceMatrix) {
   }
   y[n] <- 0
   r = solve(XTX, XTy)
-  return(r[order(-r), , drop=FALSE])
+  return(rownames(r[order(-r), , drop=FALSE]));
 }
 
 from_a_to_A = function (a) {
@@ -311,5 +310,29 @@ main = function () {
   A <- from_a_to_A(a);
 }
 
+#main();
 
-main();
+doSynthetic = function () {
+  courses <- c("33A", "33B", "115A", "164");
+  C <- data.frame(a = 1:4, b = 5:8, c = 3:4, d = 6:9);
+  rownames(C) <- colnames(C) <- courses;
+  
+  # serial rank
+  sr <- serialRank(C);
+  
+  # rank centrality
+  rc <- rankCentrality(C);
+  
+  # least squares
+  ls <- leastSquaresRanking(C);
+  
+  kendall(sr, rc);
+  kendall(sr, ls);
+  kendall(rc, ls);
+}
+
+doReal = function () {
+  # TODO  
+}
+
+doSynthetic();
