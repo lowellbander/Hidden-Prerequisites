@@ -31,6 +31,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{url}
+\usepackage[]{algorithm2e}
 % \usepackage{color}
 
 % \usepackage[toc,page]{appendix}
@@ -125,20 +126,36 @@ serial rank, rank centrality, prerequisites, least squares, kendall tau distance
 
 This is the Introduction.
 
-\vspace{10mm}  % add white space whenever needed
-
-This is how you cite a reference paper  \cite{corePerOxford} or multiple ones  \cite{corePerOxford,puckmason}.
-
-\begin{figure}[h]
-\begin{center}
+%\vspace{10mm}  % add white space whenever needed
+%
+%This is how you cite a reference paper  \cite{corePerOxford} or multiple ones  \cite{corePerOxford,puckmason}.
+%
+%\begin{figure}[h]
+%\begin{center}
 %\includegraphics[width=0.46\columnwidth]{Directed_Core_Per}
-\end{center}
-\caption{This is how you add a plot to a Figure. It is always a good idea to add such a caption to each Figure, and explain what the figure is about. Also, if your plot has x and y axis, please always label your graphs (within MATLAB) so that your plots/results can be easily read and understood.}
-\label{fig:DirCorPer}
-\end{figure}
-
-This is how you cite a (labeled) section: In Section \ref{sec:relWork}, we describe the related work considered in \cite{puckmason}.
+%\end{center}
+%\caption{This is how you add a plot to a Figure. It is always a good idea to add such a caption to each Figure, and explain what the figure is about. Also, if your plot has x and y axis, please always label your graphs (within MATLAB) so that your plots/results can be easily read and understood.}
+%\label{fig:DirCorPer}
+%\end{figure}
+%
+%This is how you cite a (labeled) section: In Section \ref{sec:relWork}, we describe the related work considered in \cite{puckmason}.
 %%
+%In Section \ref{sec:ourWork} we ... 
+%In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically generated data sets, while in Section \ref{sec:NumExpReal} we do so for a real data set. Finally, in Section  \ref{sec:conclusion} we conclude with a summary of our results, and discuss future possible research direction. 
+%
+%\section{Related work} \label{sec:relWork}
+%
+%\textbf{Questions/Comments/Things that could be done}
+%\begin{itemize}
+%\item What is a good notion of core-periphery structure in directed networks? Would the null model shown in Figure \ref{fig:DirCorPer} be a good model?
+%\item Can one build on or expand some of the above methods and apply them to directed networks? 
+%\item As a starting point, perhaps apply simulated annealing to the objective function induced by the above null model
+%\item Apply this to a real network, a good such example might be the migration network between counties in the United States, which we have seen in class in the past.
+%\item This is how you add an url link 
+% \begin{center}
+%   \url{http://people.maths.ox.ac.uk/porterm/papers/prestige_final.pdf} 
+%\end{center}   
+%\end{itemize}
 In Section \ref{sec:ourWork} we ... 
 In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically generated data sets, while in Section \ref{sec:NumExpReal} we do so for a real data set. Finally, in Section  \ref{sec:conclusion} we conclude with a summary of our results, and discuss future possible research direction. 
 
@@ -174,8 +191,21 @@ C_{ij} = \left\{
    \right.
 \label{comparisonMatrix}
 \end{equation}
-
-
+By convention we define $Ci,i = 1$ for all $i \in \{1, \dots, n\}$ ($Ci,i$ values have no effect in the
+ranking method presented in algorithm SerialRank.\\
+After constructing the comparison matrix $C$ we define the pair-wise similarity matrix $S^{\text{match}}$ as $$S^{\text{match}} = \sum_{k = 1}^{n} \frac{1+C_{i, k}C_{j, k}}{2}$$
+Thus $S^{\text{match}}_{i, j}$ counts the number of matching comparisons between $i$ and $j$ with other reference
+items $k$. Equivalently $S^{\text{match}}$ can be expressed in closed-form as $$S^{\text{match}} = \frac{1}{2}(n11^T + CC^T)$$
+\begin{algorithm}[H]
+\KwData{A set of pairwise comparisons $C_{i,j} \in \{1, 0, 1\}$ or $[1, 1]$.}
+\begin{enumerate}
+\item Compute the similarity matrix $S$ as described above
+\item Compute Laplacian matrix $$L = D - S$$ where $D$ is a diagonal matrix and $D_{i, i} = \sum_{j = 1}^{n}S_{i, j}$ is the degree of node $i$.
+\item Compute the Fiedler vector of S.
+\end{enumerate}
+\KwResult{A ranking induced by sorting the Fiedler vector of $S$}
+ \caption{Serial Rank Algorithm}
+\end{algorithm}
 % todo: 
 % * complete explanation of serial rank, as it pertains to our project
 % * necessity of increasing minimum courses to make believable rank
