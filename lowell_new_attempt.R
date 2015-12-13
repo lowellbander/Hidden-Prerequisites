@@ -129,7 +129,6 @@ serialRank = function(nmatrix) {
 }
 
 rankCentrality = function(nmatrix) {
-  diag(nmatrix) <- 0
   names = colnames(nmatrix)
   n<-dim(nmatrix)[1]
   A <- data.matrix(nmatrix) # Aij = the number of times j occurs before i
@@ -181,12 +180,13 @@ rankCentrality = function(nmatrix) {
   
 
   #we need the top left eigenvector, not sure if this is right
-  P_eigen <- eigen(t(P))#left eigenvectors
-  nonzeroEigenvalue = P_eigen$values[20];
-  
-  P_TopLeftEigenvector = P_eigen$vectors[,20]
-
-  
+  #P_eigen <- eigen(t(P))#left eigenvectors
+  P_eigen <- eigen(P)#right eigenvectors
+  #nonzeroEigenvalue = P_eigen$values[20];
+  nonzeroEigenvalue = P_eigen$values[P_eigen$values != 0]
+  #P_TopLeftEigenvector = P_eigen$vectors[,20]
+  P_TopLeftEigenvector = P_eigen$vectors[,length(nonzeroEigenvalue)]
+  #P_TopLeftEigenvector = P_eigen$vectors[,4]
   sortedP_LeftEigenVector = sort(P_TopLeftEigenvector)
   
   final = matrix(data=0, nrow=n, ncol=1)
@@ -198,6 +198,7 @@ rankCentrality = function(nmatrix) {
       }
     }
   }
+  return(final)
 }
 
 compare = function (this, that, courses) {
