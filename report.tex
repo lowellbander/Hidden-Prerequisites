@@ -114,11 +114,11 @@
 
 \begin{abstract}
 %Abstract goes here. Provide 10-15 lines with a summary of your work.
-We sought to use historical student data to discover/validate the prerequisite choices of the Mathematics and Computer Science at the University of California, Los Angeles (UCLA). Specifically, we used the Serial Rank, Rank Centrality, and Least Squares ranking algorithms to construct total orderings of courses so as to optimize graduating grade-point average (GPA). We also used intermediate calculations from the above ranking algorithms to construct a directed acyclic graph (DAG) to illustrate the notion of courses being prerequisites for other courses.
+We sought to use historical student data to discover/validate the prerequisite choices of the Mathematics and Computer Science at the University of California, Los Angeles (UCLA). Specifically, we used the Serial Rank, Rank Centrality, and Least Squares ranking algorithms to construct total orderings of courses so as to optimize graduating grade-point average (GPA). We then implemented the Kednall Tau Distance algorithm to determine the degree with which our various ranking algorithms agreed in the total ordering they outputted. Finally, used intermediate calculations from the above ranking algorithms to construct a directed acyclic graph (DAG) to illustrate the notion of courses being prerequisites for other courses.
 \end{abstract}
 
 \begin{keywords} %A few keyword that best describe your work. For example:  network centrality, spectral algorithms, gravity models, vertex similarity, core periphery structure, directed graphs, local-to-global algorithms, multiple network alignment, clustering bipartite graphs, angular synchronization
-serial rank, rank centrality, prerequisites, least squares
+serial rank, rank centrality, prerequisites, least squares, kendall tau distance
 \end{keywords}
 
 \section{Introduction}
@@ -142,28 +142,24 @@ This is how you cite a (labeled) section: In Section \ref{sec:relWork}, we descr
 In Section \ref{sec:ourWork} we ... 
 In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically generated data sets, while in Section \ref{sec:NumExpReal} we do so for a real data set. Finally, in Section  \ref{sec:conclusion} we conclude with a summary of our results, and discuss future possible research direction. 
 
-\section{Related work} \label{sec:relWork}
+\section{Related work} \label{sec:relWork}\textcolor{white}{.}\\
 
-\textbf{Questions/Comments/Things that could be done}
-\begin{itemize}
-\item What is a good notion of core-periphery structure in directed networks? Would the null model shown in Figure \ref{fig:DirCorPer} be a good model?
-\item Can one build on or expand some of the above methods and apply them to directed networks? 
-\item As a starting point, perhaps apply simulated annealing to the objective function induced by the above null model
-\item Apply this to a real network, a good such example might be the migration network between counties in the United States, which we have seen in class in the past.
-\item This is how you add an url link 
- \begin{center}
-   \url{http://people.maths.ox.ac.uk/porterm/papers/prestige_final.pdf} 
-\end{center}   
-\end{itemize}
+[1] Sedgewick, Robert. \textit{Algorithms}. Reading, MA: Addison-Wesley, 1988. Print. Chapter 2.5 Sorting Applications, Kendall tau distance.\\
+
+[2] Negahban, Sahand, Sewoong Oh, and Devavrat Shah. ``Iterative Ranking from Pair-wise Comparisons." Advances in Neural Information Processing Systems 25 (2012): 2474-482. Http://papers.nips.cc/paper/4701-iterative-ranking-from-pair-wise-comparisons.pdf. Curran Associates, Inc. Web.\\
+
+[3] Fogel, Fajwel, Alexandre D'Aspremont, and Milan Vojnovic. ``SerialRank: Spectral Ranking Using Seriation." SerialRank: Spectral Ranking Using Seriation (n.d.): n. pag. Web.
 
 \section{Our work}    \label{sec:ourWork}
 %Describe the bulk of your work in this section.
+\subsection{Getting Started}
 Our first steps in this endeavor involved acquisition of the data requisite to perform out analysis. Specifically, we sought to obtain, for several students, in both the Mathematics (Math) and Computer Science (CS) departments, over many years: (1) the order in which each student took their courses, and (2) their graduating GPA for the relevant department, either Math or CS.\\
 
 Our professor for this course, Mihai Cucuringu, had previously obtained the requisite dataset from the Math department and was kind enough to share this with us. Unfortunately, we were not successful in obtaining the corresponding dataset for the CS department before the due date of this project. This is not for lack of effort, for we approached members of the Registrar's office, the current and a former chair of the CS department, as well as the Office of Academic and Student Affairs for the School of Engineering and Applied Science (OASA SEAS).\\
 
 As mentioned in the abstract of our paper, we sought to implement various ranking algorithms to determine total orderings of courses as a method of validating existing prerequisites and potentially discovering hidden ones, courses that ought to be prerequisites but are not currently. Moreover, we sought to visualize the prerequisite relationship among courses by construction of a directed acyclic graph (DAG), wherein children nodes have parents as their prerequisites, and wherein the edge weights between nodes represents the confidence with which our data supports one course being a prerequisite for another course. \\
 
+\subsection{Serial Rank}
 As we began implementation of the Serial Rank algorithm we noted that an intermediate computation of the algorithm would prove very useful in the construction of the DAG described above. Namely, both share the need for a matrix $C$ containing pairwise comparisons, such that $C\in \{-1,0,1\}^{n\times n}$, where $n$ is the number of courses a student takes. The elements of $C$ are determined as follows:
 
 \begin{equation}
@@ -186,8 +182,10 @@ C_{ij} = \left\{
 % * finding a common subset for difference matrix, explain algorithm, perhaps code snippet
 % * lack of confidence given how few students over such a large time span end up being in our data set
 % * how the above results in a lot of noise, such that analyzing the comparison matrix wasn't illuminating.
-% * kendall tau distance, perhaps with incrementing GPA successively by 0.1
 % * compare our kendal distance algorithm to the inbuilt one
+
+\subsection{DAG Construction}
+As mentioned above, we sought to create a DAG to visualize the prerequisite relationship between courses. To do this, we used the same $C$ matrix as for the Serial Rank algorithm, and computed it for both A ranked (GPA between 3.7 and 4.0) and C ranked (GPA between 1.7 and 2.3) students. We then found the difference of these two matrices, and examined entries which had large values, because these would suggest that taking the corresponding courses in a different order has had a causal role in the discrepancy between GPA for A and C students.
 
 \subsection{Rank Centrality}
 
@@ -222,6 +220,21 @@ $\pi$ can also be computed by taking the top left eigenvector of $P$.
 
 For our work, we will simply compute the $P$ matrix and then take its top left eigenvector which will denote the ranking of courses.
 
+\subsection{Kendall Tau Distance}
+To measure the degree of agreement between our various ranking methods, we implemented the Kendall Tau Distance algorithm. When normalized, this algorithm produces a value between 0 and 1, with the former value meaning the rankings given to the algorithm are in complete agreement, and the latter value meaning one ranking is the reverse of the other.\\
+
+Formally, the Kendall Tau Distance between two rankings $L1$ and $L2$ can be written as
+\begin{equation}
+K(\tau_1,\tau_2) = |\{(i,j): i < j, ( \tau_1(i) < \tau_1(j) \wedge \tau_2(i) > \tau_2(j) ) \vee ( \tau_1(i) > \tau_1(j) \wedge \tau_2(i) < \tau_2(j) )\}|.
+\end{equation}
+
+where $\tau_1(i)$ and $\tau_2(i)$ are the rankings of element $i$ in $L1$ and $L2$ respectively. This non-normalized value of $K(\tau_1,\tau_2)$ counts the total number of pairwise disagreements between the two input rankings.\\
+
+As mentioned above, the value $K(\tau_1,\tau_2)$ can be normalized such that the percentage with which the two rankings differ can be produced.
+\begin{equation}
+K(\tau_1,\tau_2)_{norm} = \frac{K(\tau_1,\tau_2)}{n(n-1)/2}
+\end{equation}
+where $n = |L1| = |L2|$.
 
 \section{Numerical experiments on synthetic data}  \label{sec:NumExpSyn}
 Present here the numerical results you obtain on a synthetically generated data set...

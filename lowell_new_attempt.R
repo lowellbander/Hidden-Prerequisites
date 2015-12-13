@@ -196,7 +196,7 @@ matrixSubset = function (m, headers) {
 
 # computes the [normalized] kendall distance for two orderings
 # firstOrdering is assumed to be a permutation of secondOrdering
-kendall = function (firstOrdering, secondOrdering, normalize = FALSE) {
+kendall = function (firstOrdering, secondOrdering, normalize = TRUE) {
   nDisagreements <- 0;
   len <- length(firstOrdering);
   
@@ -225,6 +225,40 @@ kendall = function (firstOrdering, secondOrdering, normalize = FALSE) {
   return(nDisagreements);
 }
 
+leastSquaresRanking = function(preferenceMatrix) {
+  n = dim(preferenceMatrix)[1];
+  X = matrix(data=0, ncol=n, nrow=n*(n-1)/2);
+  y = matrix(data=0, ncol=1, nrow=n*(n-1)/2);
+  colnames(X) <- colnames(preferenceMatrix)
+  k = 1
+  for (i in 1:n) {
+    j <- i+1
+    while (j <= n) {
+      y[k] <- abs(preferenceMatrix[i, j] - preferenceMatrix[j, i])
+      if (preferenceMatrix[i, j] >= preferenceMatrix[j, i]) {
+        X[k, i] <- 1
+        X[k, j] <- -1
+      }
+      else {
+        X[k, i] <- -1
+        X[k, j] <- 1
+      }
+      k <- k+1
+      j <- j+1
+    }
+  }
+  
+  XTX = t(X) %*% X
+  XTy = t(X) %*% y
+  
+  for (i in 1:n) {
+    XTX[n, i] <- 1;
+  }
+  y[n] <- 0
+  r = solve(XTX, XTy)
+  return(r[order(-r), , drop=FALSE])
+}
+
 from_a_to_A = function (a) {
   A <- a;
   len <- dim(A)[1];
@@ -239,7 +273,6 @@ from_a_to_A = function (a) {
       }
     }
   }
-  
   return(A);
 }
 
@@ -251,11 +284,13 @@ main = function () {
   C_pruned <- matrixSubset(C, commonCourses);
   differenceMatrix <- A_pruned - C_pruned;
   
-  k <- kendall(serialRank(A_pruned), serialRank(C_pruned), TRUE);
+  k <- kendall(serialRank(A_pruned), serialRank(C_pruned));
   
   a <- generateComparisonMatrixForGPA(3.7, 4.0, forSerialRank = FALSE, reducer = flatten);
-  
+  LSR = leastSquaresRanking(a)
+  print(LSR)
   A <- from_a_to_A(a);
 }
+
 
 main();
