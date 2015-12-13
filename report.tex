@@ -195,10 +195,10 @@ Objective: Implement and use the Rank Centrality algorithm on our dataset to com
 
 The Rank Centrality algorithm takes in as input a graph $G([n],E,A)$ and outputs a stationary distribution $\{\pi(i)\}_{i\in [n]}$ assigning numerical scores to each node.
 
-To do this, we must first compute a matrix $a_{ij}$ where each $ij^{th}$ entry represents the number of times the $j^{th}$ element is preferred to the $i^{th}$ element. In our case this is the number of students who have taken class j before class i. We then create a new normalized matrix $A_{ij} = \frac{a_{ij}}{a_{ij} + a_{ji}}$. If there is no comparison, we set $A_{ij} = 0$. We use $A_{ij}$ to create a Probability matrix $P$ representing the time-dependent likely-hood of a random walk from i to j.
+To do this, we must first compute a matrix $a_{ij}$ where each $ij^{th}$ entry represents the number of times the $j^{th}$ element is preferred to the $i^{th}$ element. In our case this is the number of students who have taken class j before class i. We then create a new normalized matrix $A_{ij} = \frac{a_{ij}}{a_{ij} + a_{ji}}$. If there is no comparison, we set $A_{ij} = 0$. We use $A_{ij}$ to create a Probability matrix $P$ representing the time-dependent likelihood of a random walk from i to j.
 $$P_{ij} =  \P (x_{t+1}=j|x_{j}=i))$$
 
-To calculate $P_{ij}$ using the $A$ matrix, we set $d_{max} =\text{maximum out degree of a node}$ and use $d_{max}$ to ensure that the $\sum_{i,j}P_{ij} = 1$.
+To calculate $P_{ij}$ using the $A$ matrix, we set $d_{max} =\text{maximum out degree of a node}$ and scale all the edge weights by  $\frac{1}{d_{max}}$ to ensure that the $\sum_{j}P_{ij} = 1$.
 \begin{equation}
 P_{ij} = \left\{
 	\begin{array}{rl}
