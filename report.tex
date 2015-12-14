@@ -100,11 +100,13 @@
 
 \begin{pagewiselinenumbers}
 \title{MATH 191 - Topics in Data Science\\ Discovering Hidden Prerequisites}
-\author{Paul~Jazayeri \footnotemark[1], Anumat~Srivastava \footnotemark[2], Lowell~Bander \footnotemark[1]  }
+\author{Paul~Jazayeri \footnotemark[1], Anumat~Srivastava \footnotemark[2], Lowell~Bander \footnotemark[3]  }
 \maketitle
 %\renewcommand{\thefootnote}{\fnsymbol{footnote}}
 \footnotetext[1]{Department of Mathematics, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555, email: xyz@ucla.edu}
 \footnotetext[2]{Second Department, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555}
+\footnotetext[3]{Computer Science Department, UCLA, 4732 Boelter Hall
+Los Angeles, CA 90095}
 %\renewcommand{\thefootnote}{\arabic{footnote}}
 
 \begin{center}
@@ -289,9 +291,9 @@ In order to perform numerical experiments on synthetic data, we first had to con
 Using the above comparison matrix $C$, we ran our three ranking algorithms, and then computed the Kendall Tau Distance between each pair of rankings.\\
 
 \begin{verbatim}
-        sr <- serialRank(C); # [1] "33B"  "33A"  "115A" "164" 
-        rc <- rankCentrality(C); # [1] "33A"  "115A" "164"  "33B"
-        ls <- leastSquaresRanking(C); # [1] "33B"  "164"  "33A"  "115A"
+        sr <- serialRank(C);          # [1] "33B"  "33A"  "115A" "164" 
+        rc <- rankCentrality(C);      # [1] "115A" "33A"  "33B"  "164" 
+        ls <- leastSquaresRanking(C); # [1] "115A" "33A"  "33B"  "164"
         kendall(sr, rc); # [1] 0.5
         kendall(sr, ls); # [1] 0.3333333
         kendall(rc, ls); # [1] 0.8333333
