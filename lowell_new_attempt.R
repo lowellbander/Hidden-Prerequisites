@@ -438,6 +438,8 @@ doReal = function () {
   C_C <- generateComparisonMatrixForGPA(1.7, 2.3, forSerialRank = TRUE, reducer = normalize);
   SR_C <- serialRank(C_C);
   
+  LS_A; RC_A; SR_A;
+  
   # compute kendall tau distances between each of the three rankings, by GPA bucket
   
   # for A bucket
@@ -446,9 +448,9 @@ doReal = function () {
   kendall_rc_sr_A <- kendall(RC_A, SR_A);
   
   # for C bucket
-  kendall_ls_sr_A <- kendall(LS_C, SR_C);
-  kendall_ls_rc_A <- kendall(LS_C, RC_C);
-  kendall_rc_sr_A <- kendall(RC_C, SR_C);
+  kendall_ls_sr_C <- kendall(LS_C, SR_C);
+  kendall_ls_rc_C <- kendall(LS_C, RC_C);
+  kendall_rc_sr_C <- kendall(RC_C, SR_C);
   
   # find kendall distances between A and C buckets for each ranking
   commonCourses <- intersect(rownames(C_A), rownames(C_C));

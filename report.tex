@@ -305,8 +305,41 @@ Using the above comparison matrix $C$, we ran our three ranking algorithms, and 
 
 Shown beside each line of R code is the corresponding return value for the function call. The rankings are not particularly realistic, but this is understandable given that the input comparison matrix $C$ is not realistic. However, the results of the Kendall distance computations are illustrative, in that we would expect the finals rankings of each algorithm to be roughly the same. Instead, the Least Square and Rank Centrality Rankings are seen to be nearly inverses of each other, with 0.83 of the courses being in disagreement between the two rankings. The Kendall distance between the Serial Rank and Least Squares ranking, however, is somewhat low, suggesting that the algorithms roughly agree on the total ordering of courses.
 
-\section{Numerical experiments on real data}   \label{sec:NumExpReal}
-Present here the numerical results you obtain on a real data set...
+\section{Numerical experiments on real data}   \label{sec:NumExpReal}\textcolor{white}{.}
+%Present here the numerical results you obtain on a real data set...
+
+After running our algorithms on a small and synthetic dataset, we set out to use our real and rather large dataset, which produced the following total orderings of courses:
+
+\begin{figure}[H]
+\includegraphics[width=6.5in]{rankings}
+\caption{Rankings as computed by Least Squares (LS), Rank Centrality (RC), and Serial Rank (SR). Bucketed by GPA.}
+\end{figure}
+
+It can be hard to visualize how similar these rankings are, so we computed Kendall Tau Distances within each bucket:\\
+
+\begin{verbatim}
+  # for A bucket
+  kendall_ls_sr_A <- kendall(LS_A, SR_A); # [1] 0.3004032
+  kendall_ls_rc_A <- kendall(LS_A, RC_A); #
+  kendall_rc_sr_A <- kendall(RC_A, SR_A); # [1] 0.3830645
+  
+  # for C bucket
+  kendall_ls_sr_C <- kendall(LS_C, SR_C); # [1] 0.2365591
+  kendall_ls_rc_C <- kendall(LS_C, RC_C); # [1] 0.5096774
+  kendall_rc_sr_C <- kendall(RC_C, SR_C); # [1] 0.5870968
+\end{verbatim}
+\textcolor{white}{.}\\
+Furthermore, to visualize how different the course orderings were for A and C students, we computed the Kendall Tau Distance for the Serial Ranking of these students, taking care to ensure that the comparison matrices only had courses common to all these students.\\
+
+\begin{verbatim}
+# find kendall distances between A and C buckets for each ranking
+  commonCourses <- intersect(rownames(C_A), rownames(C_C));
+  C_A_pruned <- matrixSubset(C_A, commonCourses);
+  C_C_pruned <- matrixSubset(C_C, commonCourses);
+  kendall_sr <- kendall(serialRank(C_A_pruned), serialRank(C_C_pruned));
+\end{verbatim}
+\textcolor{white}{.}\\
+Which returns the value of 0.1862069 for \texttt{kendall\_sr}, illustrating that A and C students don't take courses in wildly different order, but that there does seem to be a consistent difference in their orderings.
 
 \section{Summary and conclusion}  \label{sec:conclusion}
 \subsection{DAG Construction}
