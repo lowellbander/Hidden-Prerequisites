@@ -198,7 +198,7 @@ rankCentrality = function(nmatrix) {
       }
     }
   }
-  return(final)
+  return(as.vector(final))
 }
 
 compare = function (this, that, courses) {
