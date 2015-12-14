@@ -104,7 +104,7 @@
 \maketitle
 %\renewcommand{\thefootnote}{\fnsymbol{footnote}}
 \footnotetext[1]{Department of Mathematics, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555}
-\footnotetext[2]{Second Department, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555}
+\footnotetext[2]{Department of Mathematics, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555}
 \footnotetext[3]{Computer Science Department, UCLA, 4732 Boelter Hall
 Los Angeles, CA 90095}
 %\renewcommand{\thefootnote}{\arabic{footnote}}
@@ -132,18 +132,6 @@ The lecture on ranking algorithms was perhaps one of the most eye opening applic
 Because of this, we sought to use various ranking algorithms to empirically determine which courses should in fact be taken before other courses.\\
 
 In Section \ref{sec:ourWork} we describe our attempts to acquire the requisite data for this report, and then go on to describe the algorithms we used on the data we acquired. In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically generated data sets, while in Section \ref{sec:NumExpReal} we do so for a real data set. Finally, in Section  \ref{sec:conclusion} we conclude with a summary of our results, and discuss future possible research direction. 
-
-\section{Related work} \label{sec:relWork}\textcolor{white}{.}\\
-
-[1] Sedgewick, Robert. \textit{Algorithms}. Reading, MA: Addison-Wesley, 1988. Print. Chapter 2.5 Sorting Applications, Kendall tau distance.\\
-
-[2] Negahban, Sahand, Sewoong Oh, and Devavrat Shah. ``Iterative Ranking from Pair-wise Comparisons." Advances in Neural Information Processing Systems 25 (2012): 2474-482. Http://papers.nips.cc/paper/4701-iterative-ranking-from-pair-wise-comparisons.pdf. Curran Associates, Inc. Web.\\
-
-[3] Fogel, Fajwel, Alexandre D'Aspremont, and Milan Vojnovic. ``SerialRank: Spectral Ranking Using Seriation." SerialRank: Spectral Ranking Using Seriation (n.d.): n. pag. Web.\\
-
-[4] Statistical Models Applied to the Rating of Sports Teams, Kenneth Massey\\
-
-[5] Sync-Rank: Robust Ranking, Constrained Ranking And Rank Aggregation Via Eigenvector And Sdp Synchronization, Mihai Cucuringu
 
 \section{Our work}    \label{sec:ourWork}
 %Describe the bulk of your work in this section.
@@ -356,8 +344,15 @@ Serial Rank gave the most accurate ranking, followed by Least Squares.
 \subsection{Rank Centrality}
 Our implementation for rank centrality sadly did not output a plausible ranking of courses as serial rank did. We believe the reason for this may be due to an incorrect choice of the eigenvector for $\pi$. $\pi$ is the top left eigenvector of the Probability matrix $P$ and the final assignment of courses to their scores. We assumed that the top left eigenvector is synonymous with the left eigenvector associated with the left eigenvalue of the highest magnitude (other than 1). We came to this assumption after observing that this choice gave a more plausible ranking than other assumptions for the top left eigenvector. Although more plausible, the rankings we arrived with are still far from logical and must indicate error in our implementation of the algorithm.
 
+%\bibliographystyle{siam}
 
-\bibliographystyle{siam}
+\begin{thebibliography}{1}
+\bibitem{1} Sedgewick, Robert. \textit{Algorithms}. Reading, MA: Addison-Wesley, 1988. Print. Chapter 2.5 Sorting Applications, Kendall tau distance
+\bibitem{2} Negahban, Sahand, Sewoong Oh, and Devavrat Shah. ``Iterative Ranking from Pair-wise Comparisons." Advances in Neural Information Processing Systems 25 (2012): 2474-482. Http://papers.nips.cc/paper/4701-iterative-ranking-from-pair-wise-comparisons.pdf. Curran Associates, Inc. Web
+\bibitem{3} Fogel, Fajwel, Alexandre D'Aspremont, and Milan Vojnovic. ``SerialRank: Spectral Ranking Using Seriation." SerialRank: Spectral Ranking Using Seriation (n.d.): n. pag. Web.
+\bibitem{4} Massey, Kenneth. "Statistical Models Applied to the Rating of Sports Teams." 1 Feb. 1997. Web. 14 Dec. 2015.
+\bibitem{5} Cucuringu, Mihai. "Sync-Rank: Robust Ranking, Constrained Ranking And Rank Aggregation Via Eigenvector And Sdp Synchronization,." 28 Sept. 2015. Web. 14 Dec. 2015.
+\end{thebibliography}
 
 \end{pagewiselinenumbers}
 
