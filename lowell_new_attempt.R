@@ -198,7 +198,7 @@ rankCentrality = function(nmatrix) {
       }
     }
   }
-  return(final)
+  return(as.vector(final))
 }
 
 compare = function (this, that, courses) {
@@ -364,24 +364,6 @@ from_a_to_A = function (a) {
   return(A);
 }
 
-main = function () {
-  A <- generateComparisonMatrixForGPA(3.7, 4.0);
-  C <- generateComparisonMatrixForGPA(1.7, 2.3);
-  commonCourses <- intersect(rownames(A), rownames(C));
-  A_pruned <- matrixSubset(A, commonCourses);
-  C_pruned <- matrixSubset(C, commonCourses);
-  differenceMatrix <- A_pruned - C_pruned;
-  
-  k <- kendall(serialRank(A_pruned), serialRank(C_pruned));
-  
-  a <- generateComparisonMatrixForGPA(1.7, 2.3, forSerialRank = FALSE, reducer = flatten);
-  LSR = leastSquaresRanking(a)
-  print(LSR)
-  A <- from_a_to_A(a);
-}
-
-#main();
-
 doSynthetic = function () {
   
   # create synthetic comparison matrix
@@ -441,6 +423,14 @@ doReal = function () {
   kendall_ls_rc_A <- kendall(LS_C, RC_C);
   kendall_rc_sr_A <- kendall(RC_C, SR_C);
   
+  # find edge weights for DAG
+  A <- generateComparisonMatrixForGPA(3.7, 4.0);
+  C <- generateComparisonMatrixForGPA(1.7, 2.3);
+  commonCourses <- intersect(rownames(A), rownames(C));
+  A_pruned <- matrixSubset(A, commonCourses);
+  C_pruned <- matrixSubset(C, commonCourses);
+  differenceMatrix <- A_pruned - C_pruned;
+    
 }
 
 doSynthetic();

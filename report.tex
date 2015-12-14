@@ -1,6 +1,7 @@
 \documentclass[10pt]{siamltex}
 % siamltex     final
 \usepackage{amsmath,amssymb,epsfig}
+\usepackage{listings}
 %\usepackage[]{graphicx,epsf,epsfig,amsmath,amssymb,amsfonts,latexsym,amsthm}
 % \usepackage{bbm}
 %\usepackage{amsfonts}
@@ -124,40 +125,11 @@ serial rank, rank centrality, prerequisites, least squares, kendall tau distance
 
 \section{Introduction}
 
-This is the Introduction.
+The lecture on ranking algorithms was perhaps one of the most eye opening applications introduced in this course. As students, we have seen that courses are sometimes listed as prerequisites for other courses, when in fact they ought not to be. Conversely, we have seen that some courses perhaps should be prerequisites, given that one course serves as such a good primer for another and makes the subject matter much less daunting.\\
 
-%\vspace{10mm}  % add white space whenever needed
-%
-%This is how you cite a reference paper  \cite{corePerOxford} or multiple ones  \cite{corePerOxford,puckmason}.
-%
-%\begin{figure}[h]
-%\begin{center}
-%\includegraphics[width=0.46\columnwidth]{Directed_Core_Per}
-%\end{center}
-%\caption{This is how you add a plot to a Figure. It is always a good idea to add such a caption to each Figure, and explain what the figure is about. Also, if your plot has x and y axis, please always label your graphs (within MATLAB) so that your plots/results can be easily read and understood.}
-%\label{fig:DirCorPer}
-%\end{figure}
-%
-%This is how you cite a (labeled) section: In Section \ref{sec:relWork}, we describe the related work considered in \cite{puckmason}.
-%%
-%In Section \ref{sec:ourWork} we ... 
-%In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically generated data sets, while in Section \ref{sec:NumExpReal} we do so for a real data set. Finally, in Section  \ref{sec:conclusion} we conclude with a summary of our results, and discuss future possible research direction. 
-%
-%\section{Related work} \label{sec:relWork}
-%
-%\textbf{Questions/Comments/Things that could be done}
-%\begin{itemize}
-%\item What is a good notion of core-periphery structure in directed networks? Would the null model shown in Figure \ref{fig:DirCorPer} be a good model?
-%\item Can one build on or expand some of the above methods and apply them to directed networks? 
-%\item As a starting point, perhaps apply simulated annealing to the objective function induced by the above null model
-%\item Apply this to a real network, a good such example might be the migration network between counties in the United States, which we have seen in class in the past.
-%\item This is how you add an url link 
-% \begin{center}
-%   \url{http://people.maths.ox.ac.uk/porterm/papers/prestige_final.pdf} 
-%\end{center}   
-%\end{itemize}
-In Section \ref{sec:ourWork} we ... 
-In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically generated data sets, while in Section \ref{sec:NumExpReal} we do so for a real data set. Finally, in Section  \ref{sec:conclusion} we conclude with a summary of our results, and discuss future possible research direction. 
+Because of this, we sought to use various ranking algorithms to empirically determine which courses should in fact be taken before other courses.\\
+
+In Section \ref{sec:ourWork} we describe our attempts to acquire the requisite data for this report, and then go on to describe the algorithms we used on the data we acquired. In Section  \ref{sec:NumExpSyn} we test the above algorithms on synthetically generated data sets, while in Section \ref{sec:NumExpReal} we do so for a real data set. Finally, in Section  \ref{sec:conclusion} we conclude with a summary of our results, and discuss future possible research direction. 
 
 \section{Related work} \label{sec:relWork}\textcolor{white}{.}\\
 
@@ -270,14 +242,44 @@ where $n = |L1| = |L2|$.
 
 \section{Numerical experiments on synthetic data}  \label{sec:NumExpSyn}
 %Present here the numerical results you obtain on a synthetically generated data set...
+In order to perform numerical experiments on synthetic data, we first had to construct a synthetic comparison matrix which all of our ranking algorithms would use. To do this, we filled a 4x4 matrix with arbitrary values.\\
 
+\begin{center}
+\begin{table}
+\end{table}
+\begin{tabular}{ c | c | c | c | c}
+& \textbf{33A} & \textbf{33B} & \textbf{115A} & \textbf{164}\\\hline
+\textbf{33A}    & 1 & 5  & 3 & 6\\
+\textbf{33B}    & 2 & 6  & 4 & 7\\
+\textbf{115A} &  3 & 7 & 3 & 8\\
+\textbf{164}    &  4 & 8 & 4 & 9\\
+\end{tabular}
+\\\textbf{Table 1:} Arbitrary pairwise comparison matrix. 
+\end{center}
 
+Using the above comparison matrix $C$, we ran our three ranking algorithms, and then computed the Kendall Tau Distance between each pair of rankings.\\
+
+\begin{verbatim}
+        sr <- serialRank(C); # [1] "33B"  "33A"  "115A" "164" 
+        rc <- rankCentrality(C); # [1] "33A"  "115A" "164"  "33B"
+        ls <- leastSquaresRanking(C); # [1] "33B"  "164"  "33A"  "115A"
+        kendall(sr, rc); # [1] 0.5
+        kendall(sr, ls); # [1] 0.3333333
+        kendall(rc, ls); # [1] 0.8333333
+\end{verbatim}
+
+Shown beside each line of R code is the corresponding return value for the function call. The rankings are not particularly realistic, but this is understandable given that the input comparison matrix $C$ is not realistic. However, the results of the Kendall distance computations are illustrative, in that we would expect the finals rankings of each algorithm to be roughly the same. Instead, the Least Square and Rank Centrality Rankings are seen to be nearly inverses of each other, with 0.83 of the courses being in disagreement between the two rankings. The Kendall distance between the Serial Rank and Least Squares ranking, however, is somewhat low, suggesting that the algorithms roughly agree on the total ordering of courses.
 
 \section{Numerical experiments on real data}   \label{sec:NumExpReal}
 Present here the numerical results you obtain on a real data set...
 
 \section{Summary and conclusion}  \label{sec:conclusion}
-Summarize your work in this section.
+\subsection{DAG Construction}
+Dishearteningly, once we constructed comparison matrices for students of A and C range GPA's, and then found the difference of these two matrices, we saw that there was little meaningful information to be had. This is to say, there were several entries with values that would suggest that a course should most definitely be taken before another course, but for which this distinction was not semantically meaningful. For example, the difference matrix suggested that PIC 10A somehow should be a prerequisite for Math 33B.\\
+
+Our results may have been different if our data set was somehow even larger than it was, because the resulting buckets from divvying up students by GPA were rather small, which means the entries may have not been statistically significant and wrought with noise.\\
+
+Moreover, such an analysis may have been more useful if the data we ran our algorithms on was somehow for a department lacking in prerequisites. That is to say, because the Math department enforces many sensical prerequisites, there were few if any students who took a very different ordering of courses than any other given student.
 
 \bibliographystyle{siam}
 \bibliography{project_math191}
