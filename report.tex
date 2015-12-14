@@ -103,7 +103,7 @@
 \author{Paul~Jazayeri \footnotemark[1], Anumat~Srivastava \footnotemark[2], Lowell~Bander \footnotemark[3]  }
 \maketitle
 %\renewcommand{\thefootnote}{\fnsymbol{footnote}}
-\footnotetext[1]{Department of Mathematics, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555, email: xyz@ucla.edu}
+\footnotetext[1]{Department of Mathematics, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555}
 \footnotetext[2]{Second Department, UCLA, 520 Portola Plaza, Mathematical Sciences Building 6363, Los Angeles, CA 90095-1555}
 \footnotetext[3]{Computer Science Department, UCLA, 4732 Boelter Hall
 Los Angeles, CA 90095}
@@ -169,16 +169,16 @@ C_{ij} = \left\{
    \right.
 \label{comparisonMatrix1}
 \end{equation}
-By convention we define $Ci,i = 1$ for all $i \in \{1, \dots, n\}$ ($Ci,i$ values have no effect in the
+By convention we define $C_{i,i} = 1$ for all $i \in \{1, \dots, n\}$ ($C_{i,i}$ values have no effect in the
 ranking method presented in algorithm SerialRank.\\
-After constructing the comparison matrix $C$ we define the pair-wise similarity matrix $S^{\text{match}}$ as $$S^{\text{match}} = \sum_{k = 1}^{n} \frac{1+C_{i, k}C_{j, k}}{2}$$
-Thus $S^{\text{match}}_{i, j}$ counts the number of matching comparisons between $i$ and $j$ with other reference
+After constructing the comparison matrix $C$ we define the pair-wise similarity matrix $S^{\text{match}}$ as $$S^{\text{match}} = \sum_{k = 1}^{n} \frac{1+C_{ik}C_{j, k}}{2}$$
+Thus $S^{\text{match}}_{ij}$ counts the number of matching comparisons between $i$ and $j$ with other reference
 items $k$. Equivalently $S^{\text{match}}$ can be expressed in closed-form as $$S^{\text{match}} = \frac{1}{2}(n11^T + CC^T)$$
 \begin{algorithm}[H]
 \KwData{A set of pairwise comparisons $C_{i,j} \in \{1, 0, 1\}$ or $[1, 1]$.}
 \begin{enumerate}
 \item Compute the similarity matrix $S$ as described above
-\item Compute Laplacian matrix $$L = D - S$$ where $D$ is a diagonal matrix and $D_{i, i} = \sum_{j = 1}^{n}S_{i, j}$ is the degree of node $i$.
+\item Compute Laplacian matrix $$L = D - S$$ where $D$ is a diagonal matrix and $D_{i, i} = \sum_{j = 1}^{n}S_{ij}$ is the degree of node $i$.
 \item Compute the Fiedler vector of S.
 \end{enumerate}
 \KwResult{A ranking induced by sorting the Fiedler vector of $S$}
@@ -193,8 +193,8 @@ items $k$. Equivalently $S^{\text{match}}$ can be expressed in closed-form as $$
 % * compare our kendal distance algorithm to the inbuilt one
 
 \subsection{Least Squares Ranking}
-For the least squares ranking algorithm we take as input a matrix $N$, with entries $$N_{i, j} = \sum_{i = 1}^n C^k_{i, j}$$
-where $C^k_{i, j}$ is the matrix for the $k$th student with entries
+For the least squares ranking algorithm we take as input a matrix $N$, with entries $$N_{ij} = \sum_{i = 1}^n C^k_{ij}$$
+where $C^k_{ij}$ is the matrix for the $k$th student with entries
 \begin{equation}
 C^k_{i,j} = \left\{
 	\begin{array}{rl}
@@ -205,13 +205,13 @@ C^k_{i,j} = \left\{
    \right.
 \label{comparisonMatrix2}
 \end{equation}
-Then $N$ acts as an approximate to the graph $G$ since it contains in its $i, j$th entry the total number of times course $i$ appeared before course $j$. We construct the $m \times n$ matrix $X$ as
+Then $N$ acts as an approximate to the graph $G$ since it contains in its $ij^{th}$ entry the total number of times course $i$ appeared before course $j$. We construct the $m \times n$ matrix $X$ as
 \begin{equation}
 X_{i,j} = \left\{
 	\begin{array}{rl}
- 1 & \text{ if $N_{i, j} - N_{j, i} \geq 0$)} 	\\
+ 1 & \text{ if $N_{ij} - N_{ji} \geq 0$)} 	\\
  &  \\
- -1 & \text{ if $N_{i, j} - N_{j, i} < 0$) }	\\
+ -1 & \text{ if $N_{ij} - N_{ji} < 0$) }	\\
 & \\
 0 & \text{ otherwise}
      \end{array}
@@ -219,8 +219,8 @@ X_{i,j} = \left\{
 \label{comparisonMatrix3}
 \end{equation}
 where $m$ is the number of comparisons available between the $n$ courses. We simultaneously construct the vector $y$ as 
-$$y_k = \left|N_{i, j} - N_{j, i}\right|$$
-where the $k$ element of $y$ aligns with the $k$th row go $X$ (that is, the $k$th row of $X$ has the entries from comparisons between $N_{i, j}$ and $N_{j, i})$.\\
+$$y_k = \left|N_{ij} - N_{ji}\right|$$
+where the $k$ element of $y$ aligns with the $k$th row go $X$ (that is, the $k^{th}$ row of $X$ has the entries from comparisons between $N_{ij}$ and $N_{ji})$.\\
 Then, we obtain the least-squares solution to the ranking problem by solving the following minimization problem $$\min_{r \in \mathbb{R}^n} ||Xr - y||_2^2$$
 The rankings induced by sorting $r$ are the desired rankings.
 \subsection{DAG Construction}
