@@ -425,6 +425,8 @@ doReal = function () {
   C_A <- generateComparisonMatrixForGPA(3.7, 4.0, forSerialRank = TRUE, reducer = normalize);
   SR_A <- serialRank(C_A);
   
+  LS_A; RC_A; SR_A;
+  
   # compute rankings and requisite intermediate comparison matrices for C range students
   
   a_C <- generateComparisonMatrixForGPA(1.7, 2.3, forSerialRank = FALSE, reducer = flatten);
@@ -447,6 +449,13 @@ doReal = function () {
   kendall_ls_sr_A <- kendall(LS_C, SR_C);
   kendall_ls_rc_A <- kendall(LS_C, RC_C);
   kendall_rc_sr_A <- kendall(RC_C, SR_C);
+  
+  # find kendall distances between A and C buckets for each ranking
+  commonCourses <- intersect(rownames(C_A), rownames(C_C));
+  C_A_pruned <- matrixSubset(C_A, commonCourses);
+  C_C_pruned <- matrixSubset(C_C, commonCourses);
+  
+  kendall_sr <- kendall(serialRank(C_A_pruned), serialRank(C_C_pruned));
   
   # find edge weights for DAG
   A <- generateComparisonMatrixForGPA(3.7, 4.0);
