@@ -187,7 +187,36 @@ items $k$. Equivalently $S^{\text{match}}$ can be expressed in closed-form as $$
 % * compare our kendal distance algorithm to the inbuilt one
 
 \subsection{Least Squares Ranking}
-
+For the least squares ranking algorithm we take as input a matrix $N$, with entries $$N_{i, j} = \sum_{i = 1}^n C^k_{i, j}$$
+where $C^k_{i, j}$ is the matrix for the $k$th student with entries
+\begin{equation}
+C^k_{i,j} = \left\{
+	\begin{array}{rl}
+ 1 & \text{ if course $i$ is taken before course $j$, (or $i=j$)} 	\\
+ &  \\
+ 0 & \text{ otherwise }	\\
+     \end{array}
+   \right.
+\label{comparisonMatrix}
+\end{equation}
+Then $N$ acts as an approximate to the graph $G$ since it contains in its $i, j$th entry the total number of times course $i$ appeared before course $j$. We construct the $m \times n$ matrix $X$ as
+\begin{equation}
+X_{i,j} = \left\{
+	\begin{array}{rl}
+ 1 & \text{ if $N_{i, j} - N_{j, i} \geq 0$)} 	\\
+ &  \\
+ -1 & \text{ if $N_{i, j} - N_{j, i} < 0$) }	\\
+& \\
+0 & \text{ otherwise}
+     \end{array}
+   \right.
+\label{comparisonMatrix}
+\end{equation}
+where $m$ is the number of comparisons available between the $n$ courses. We simultaneously construct the vector $y$ as 
+$$y_k = \left|N_{i, j} - N_{j, i}\right|$$
+where the $k$ element of $y$ aligns with the $k$th row go $X$ (that is, the $k$th row of $X$ has the entries from comparisons between $N_{i, j}$ and $N_{j, i})$.\\
+Then, we obtain the least-squares solution to the ranking problem by solving the following minimization problem $$\min_{r \in \mathbb{R}^n} ||Xr - y||_2^2$$
+The rankings induced by sorting $r$ are the desired rankings.
 \subsection{DAG Construction}
 As mentioned above, we sought to create a DAG to visualize the prerequisite relationship between courses. To do this, we used the same $C$ matrix as for the Serial Rank algorithm, and computed it for both A ranked (GPA between 3.7 and 4.0) and C ranked (GPA between 1.7 and 2.3) students. We then found the difference of these two matrices, and examined entries which had large values, because these would suggest that taking the corresponding courses in a different order has had a causal role in the discrepancy between GPA for A and C students.
 
@@ -282,7 +311,11 @@ Our results may have been different if our data set was somehow even larger than
 Moreover, such an analysis may have been more useful if the data we ran our algorithms on was somehow for a department lacking in prerequisites. That is to say, because the Math department enforces many sensical prerequisites, there were few if any students who took a very different ordering of courses than any other given student.
 
 \bibliographystyle{siam}
-\bibliography{project_math191}
+\begin{thebibliography}{1}
+\bibitem{1} Statistical Models Applied to the Rating of Sports Teams, \textbf{Kenneth Massey} 
+\bibitem{2} Sync-Rank: Robust Ranking, Constrained Ranking And Rank Aggregation Via Eigenvector And Sdp Synchronization, \textbf{Mihai Cucuringu}
+
+\end{thebibliography}
 
 \end{pagewiselinenumbers}
 
