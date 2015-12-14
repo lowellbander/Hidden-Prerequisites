@@ -272,7 +272,12 @@ Shown beside each line of R code is the corresponding return value for the funct
 Present here the numerical results you obtain on a real data set...
 
 \section{Summary and conclusion}  \label{sec:conclusion}
-Summarize your work in this section.
+\subsection{DAG Construction}
+Dishearteningly, once we constructed comparison matrices for students of A and C range GPA's, and then found the difference of these two matrices, we saw that there was little meaningful information to be had. This is to say, there were several entries with values that would suggest that a course should most definitely be taken before another course, but for which this distinction was not semantically meaningful. For example, the difference matrix suggested that PIC 10A somehow should be a prerequisite for Math 33B.\\
+
+Our results may have been different if our data set was somehow even larger than it was, because the resulting buckets from divvying up students by GPA were rather small, which means the entries may have not been statistically significant and wrought with noise.\\
+
+Moreover, such an analysis may have been more useful if the data we ran our algorithms on was somehow for a department lacking in prerequisites. That is to say, because the Math department enforces many sensical prerequisites, there were few if any students who took a very different ordering of courses than any other given student.
 
 \bibliographystyle{siam}
 \bibliography{project_math191}
