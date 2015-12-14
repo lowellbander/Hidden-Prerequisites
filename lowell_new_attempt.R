@@ -136,7 +136,7 @@ rankCentrality = function(nmatrix) {
   dmax = matrix(data=0, nrow=n, ncol=1)
   rowoutdegree = matrix(data=0, nrow=n, ncol=1)
   coloutdegree = matrix(data=0, nrow=n, ncol=1)
-
+  
   for (i in 1:n){ # get row out degree for each node
     count = 0
     for (j in 1:n){
@@ -167,7 +167,7 @@ rankCentrality = function(nmatrix) {
   
   for (i in 1:n){  #divide everything by dmax
     for (j in 1:n){
-    P[i,j] <- A[i,j] / dmax[i,1]
+      P[i,j] <- A[i,j] / dmax[i,1]
     }
   }
   
@@ -175,7 +175,7 @@ rankCentrality = function(nmatrix) {
   for (j in 1:n) {
     P[j,j] <- 1 - sum(P[,j]);
   }
-
+  
   #we need the top left eigenvector, not sure if this is right
   P_eigen <- eigen(t(P))#left eigenvectors
   #P_eigen <- eigen(P)#right eigenvectors
