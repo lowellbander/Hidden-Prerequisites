@@ -230,9 +230,9 @@ As mentioned above, we sought to create a DAG to visualize the prerequisite rela
 
 Objective: Implement and use the Rank Centrality algorithm on our dataset to compute another ranking for course orderings taken by students in different GPA ranges. 
 
-The Rank Centrality algorithm takes in as input a graph $G([n],E,A)$ and outputs a stationary distribution $\{\pi(i)\}_{i\in [n]}$ assigning numerical scores to each node.
+The Rank Centrality algorithm takes in as input a graph $G([n],E,A)$ where  and outputs a stationary distribution $\{\pi(i)\}_{i\in [n]}$ assigning numerical scores to each node.
 
-To do this, we must first compute a matrix $a_{ij}$ where each $ij^{th}$ entry represents the number of times the $j^{th}$ element is preferred to the $i^{th}$ element. In our case this is the number of students who have taken class j before class i. We then create a new normalized matrix $A_{ij} = \frac{a_{ij}}{a_{ij} + a_{ji}}$. If there is no comparison, we set $A_{ij} = 0$. We use $A_{ij}$ to create a Probability matrix $P$ representing the time-dependent likelihood of a random walk from i to j.
+To do this, we must first compute a matrix $a_{ij}$ where each $ij^{th}$ entry represents the number of times the $j^{th}$ element is preferred to the $i^{th}$ element. In our case this is the number of students who have taken class j before class i. We then create a new normalized matrix $A_{ij} = \frac{a_{ij}}{a_{ij} + a_{ji}}$. If there is no comparison, we set $A_{ij} = 0$. We use $A_{ij}$ to create a Probability matrix $P$ representing the time-dependent likelihood of a random walk from $i$ to $j$.
 $$P_{ij} =  \P (x_{t+1}=j|x_{j}=i))$$
 
 To calculate $P_{ij}$ using the $A$ matrix, we set $d_{max} =\text{maximum out degree of a node}$ and scale all the edge weights by  $\frac{1}{d_{max}}$ to ensure that the $\sum_{j}P_{ij} = 1$.
@@ -350,7 +350,7 @@ Our results may have been different if our data set was somehow even larger than
 Moreover, such an analysis may have been more useful if the data we ran our algorithms on was somehow for a department lacking in prerequisites. That is to say, because the Math department enforces many sensical prerequisites, there were few if any students who took a very different ordering of courses than any other given student.
 
 \subsection{Rank Centrality}
-Our implementation for rank centrality sadly did not output a plausible ranking of courses as serial rank did. We believe the reason for this may be due to an incorrect choice of the eigenvector for $\pi$. $\pi$ is the top left eigenvector of the Probability matrix $P$ and the final assignment of courses to their scores. We assumed that the top left eigenvector is synonymous with the left eigenvector associated with the left eigenvalue of the highest magnitude (other than one). We came to this assumption after observing that this choice gave a more plausible ranking than other assumptions for the top left eigenvector. Although more plausible, the rankings we arrived with are still far from logical and must indicate error in our implementation of the algorithm.
+Our implementation for rank centrality sadly did not output a plausible ranking of courses as serial rank did. We believe the reason for this may be due to an incorrect choice of the eigenvector for $\pi$. $\pi$ is the top left eigenvector of the Probability matrix $P$ and the final assignment of courses to their scores. We assumed that the top left eigenvector is synonymous with the left eigenvector associated with the left eigenvalue of the highest magnitude (other than 1). We came to this assumption after observing that this choice gave a more plausible ranking than other assumptions for the top left eigenvector. Although more plausible, the rankings we arrived with are still far from logical and must indicate error in our implementation of the algorithm.
 
 
 \bibliographystyle{siam}
