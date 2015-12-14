@@ -155,10 +155,10 @@ Our professor for this course, Mihai Cucuringu, had previously obtained the requ
 As mentioned in the abstract of our paper, we sought to implement various ranking algorithms to determine total orderings of courses as a method of validating existing prerequisites and potentially discovering hidden ones, courses that ought to be prerequisites but are not currently. Moreover, we sought to visualize the prerequisite relationship among courses by construction of a directed acyclic graph (DAG), wherein children nodes have parents as their prerequisites, and wherein the edge weights between nodes represents the confidence with which our data supports one course being a prerequisite for another course. \\
 
 \subsection{Serial Rank}
-As we began implementation of the Serial Rank algorithm we noted that an intermediate computation of the algorithm would prove very useful in the construction of the DAG described above. Namely, both share the need for a matrix $C$ containing pairwise comparisons, such that $C\in \{-1,0,1\}^{n\times n}$, where $n$ is the number of courses a student takes. The elements of $C$ are determined as follows:
+As we began implementation of the Serial Rank algorithm we noted that an intermediate computation of the algorithm would prove very useful in the construction of the DAG described above. Namely, both share the need for a matrix $C$ containing pairwise comparisons, such that $C\in \{-1,0,1\}^{n\times n}$, where $n$ is the number of courses a student takes. For the $k$th student, the entries of $C^k$ are determined as follows:
 
 \begin{equation}
-C_{ij} = \left\{
+C^k_{i,j} = \left\{
 	\begin{array}{rl}
  1 & \text{ if course $i$ is taken before course $j$, (or $i=j$)} 	\\
  &  \\
@@ -169,9 +169,10 @@ C_{ij} = \left\{
    \right.
 \label{comparisonMatrix1}
 \end{equation}
-By convention we define $C_{i,i} = 1$ for all $i \in \{1, \dots, n\}$ ($C_{i,i}$ values have no effect in the
+By convention we define $C^k_{i,i} = 1$ for all $i \in \{1, \dots, n\}$ ($C^k_{i,i}$ values have no effect in the
 ranking method presented in algorithm SerialRank.\\
-After constructing the comparison matrix $C$ we define the pair-wise similarity matrix $S^{\text{match}}$ as $$S^{\text{match}} = \sum_{k = 1}^{n} \frac{1+C_{ik}C_{j, k}}{2}$$
+After finding $C^k$ for each student we add all the matrices into a single matrix $C = \sum_k C^k$ and normalize each entry $C_{i, j}$.
+Using this $C$, we define the pair-wise similarity matrix $S^{\text{match}}$ as $$S^{\text{match}} = \sum_{k = 1}^{n} \frac{1+C_{ik}C_{j, k}}{2}$$
 Thus $S^{\text{match}}_{ij}$ counts the number of matching comparisons between $i$ and $j$ with other reference
 items $k$. Equivalently $S^{\text{match}}$ can be expressed in closed-form as $$S^{\text{match}} = \frac{1}{2}(n11^T + CC^T)$$
 \begin{algorithm}[H]
@@ -209,9 +210,9 @@ Then $N$ acts as an approximate to the graph $G$ since it contains in its $ij^{t
 \begin{equation}
 X_{ij} = \left\{
 	\begin{array}{rl}
- 1 & \text{ if $N_{ij} - N_{ji} \geq 0$)} 	\\
+ 1 & \text{ if $N_{ij} - N_{ji} \geq 0$} 	\\
  &  \\
- -1 & \text{ if $N_{ij} - N_{ji} < 0$) }	\\
+ -1 & \text{ if $N_{ij} - N_{ji} < 0$ }	\\
 & \\
 0 & \text{ otherwise}
      \end{array}
@@ -220,7 +221,7 @@ X_{ij} = \left\{
 \end{equation}
 where $m$ is the number of comparisons available between the $n$ courses. We simultaneously construct the vector $y$ as 
 $$y_k = \left|N_{ij} - N_{ji}\right|$$
-where the $k$ element of $y$ aligns with the $k$th row go $X$ (that is, the $k^{th}$ row of $X$ has the entries from comparisons between $N_{ij}$ and $N_{ji})$.\\
+where the $k$ element of $y$ aligns with the $k$th row of $X$ (that is, the $k^{th}$ row of $X$ has the entries from comparisons between $N_{ij}$ and $N_{ji})$.\\
 Then, we obtain the least-squares solution to the ranking problem by solving the following minimization problem $$\min_{r \in \mathbb{R}^n} ||Xr - y||_2^2$$
 The rankings induced by sorting $r$ are the desired rankings.
 \subsection{DAG Construction}
@@ -348,6 +349,9 @@ Dishearteningly, once we constructed comparison matrices for students of A and C
 Our results may have been different if our data set was somehow even larger than it was, because the resulting buckets from divvying up students by GPA were rather small, which means the entries may have not been statistically significant and wrought with noise.\\
 
 Moreover, such an analysis may have been more useful if the data we ran our algorithms on was somehow for a department lacking in prerequisites. That is to say, because the Math department enforces many sensical prerequisites, there were few if any students who took a very different ordering of courses than any other given student.
+
+\subsection{Serial Rank and Least Squares Ranking}
+Serial Rank gave the most accurate ranking, followed by Least Squares.
 
 \subsection{Rank Centrality}
 Our implementation for rank centrality sadly did not output a plausible ranking of courses as serial rank did. We believe the reason for this may be due to an incorrect choice of the eigenvector for $\pi$. $\pi$ is the top left eigenvector of the Probability matrix $P$ and the final assignment of courses to their scores. We assumed that the top left eigenvector is synonymous with the left eigenvector associated with the left eigenvalue of the highest magnitude (other than 1). We came to this assumption after observing that this choice gave a more plausible ranking than other assumptions for the top left eigenvector. Although more plausible, the rankings we arrived with are still far from logical and must indicate error in our implementation of the algorithm.
