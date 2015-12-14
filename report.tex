@@ -349,6 +349,10 @@ Our results may have been different if our data set was somehow even larger than
 
 Moreover, such an analysis may have been more useful if the data we ran our algorithms on was somehow for a department lacking in prerequisites. That is to say, because the Math department enforces many sensical prerequisites, there were few if any students who took a very different ordering of courses than any other given student.
 
+\subsection{Rank Centrality}
+Our implementation for rank centrality sadly did not output a plausible ranking of courses as serial rank did. We believe the reason for this may be due to an incorrect choice of the eigenvector for $\pi$. $\pi$ is the top left eigenvector of the Probability matrix $P$ and the final assignment of courses to their scores. We assumed that the top left eigenvector is synonymous with the left eigenvector associated with the left eigenvalue of the highest magnitude (other than one). We came to this assumption after observing that this choice gave a more plausible ranking than other assumptions for the top left eigenvector. Although more plausible, the rankings we arrived with are still far from logical and must indicate error in our implementation of the algorithm.
+
+
 \bibliographystyle{siam}
 
 \end{pagewiselinenumbers}
