@@ -175,10 +175,10 @@ After constructing the comparison matrix $C$ we define the pair-wise similarity 
 Thus $S^{\text{match}}_{ij}$ counts the number of matching comparisons between $i$ and $j$ with other reference
 items $k$. Equivalently $S^{\text{match}}$ can be expressed in closed-form as $$S^{\text{match}} = \frac{1}{2}(n11^T + CC^T)$$
 \begin{algorithm}[H]
-\KwData{A set of pairwise comparisons $C_{i,j} \in \{1, 0, 1\}$ or $[1, 1]$.}
+\KwData{A set of pairwise comparisons $C_{ij} \in \{1, 0, 1\}$ or $[1, 1]$.}
 \begin{enumerate}
 \item Compute the similarity matrix $S$ as described above
-\item Compute Laplacian matrix $$L = D - S$$ where $D$ is a diagonal matrix and $D_{i, i} = \sum_{j = 1}^{n}S_{ij}$ is the degree of node $i$.
+\item Compute Laplacian matrix $$L = D - S$$ where $D$ is a diagonal matrix and $D_{ii} = \sum_{j = 1}^{n}S_{ij}$ is the degree of node $i$.
 \item Compute the Fiedler vector of S.
 \end{enumerate}
 \KwResult{A ranking induced by sorting the Fiedler vector of $S$}
@@ -196,7 +196,7 @@ items $k$. Equivalently $S^{\text{match}}$ can be expressed in closed-form as $$
 For the least squares ranking algorithm we take as input a matrix $N$, with entries $$N_{ij} = \sum_{i = 1}^n C^k_{ij}$$
 where $C^k_{ij}$ is the matrix for the $k$th student with entries
 \begin{equation}
-C^k_{i,j} = \left\{
+C^k_{ij} = \left\{
 	\begin{array}{rl}
  1 & \text{ if course $i$ is taken before course $j$, (or $i=j$)} 	\\
  &  \\
@@ -207,7 +207,7 @@ C^k_{i,j} = \left\{
 \end{equation}
 Then $N$ acts as an approximate to the graph $G$ since it contains in its $ij^{th}$ entry the total number of times course $i$ appeared before course $j$. We construct the $m \times n$ matrix $X$ as
 \begin{equation}
-X_{i,j} = \left\{
+X_{ij} = \left\{
 	\begin{array}{rl}
  1 & \text{ if $N_{ij} - N_{ji} \geq 0$)} 	\\
  &  \\
