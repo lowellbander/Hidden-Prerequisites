@@ -32,7 +32,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{url}
-\usepackage[]{algorithm2e}
+\usepackage[algo2e]{algorithm2e}
 % \usepackage{color}
 
 % \usepackage[toc,page]{appendix}
@@ -163,7 +163,7 @@ C_{ij} = \left\{
  -1 & \text{ if course $j$ is taken before course $i$} 
      \end{array}
    \right.
-\label{comparisonMatrix}
+\label{comparisonMatrix1}
 \end{equation}
 By convention we define $Ci,i = 1$ for all $i \in \{1, \dots, n\}$ ($Ci,i$ values have no effect in the
 ranking method presented in algorithm SerialRank.\\
@@ -199,7 +199,7 @@ C^k_{i,j} = \left\{
  0 & \text{ otherwise }	\\
      \end{array}
    \right.
-\label{comparisonMatrix}
+\label{comparisonMatrix2}
 \end{equation}
 Then $N$ acts as an approximate to the graph $G$ since it contains in its $i, j$th entry the total number of times course $i$ appeared before course $j$. We construct the $m \times n$ matrix $X$ as
 \begin{equation}
@@ -212,7 +212,7 @@ X_{i,j} = \left\{
 0 & \text{ otherwise}
      \end{array}
    \right.
-\label{comparisonMatrix}
+\label{comparisonMatrix3}
 \end{equation}
 where $m$ is the number of comparisons available between the $n$ courses. We simultaneously construct the vector $y$ as 
 $$y_k = \left|N_{i, j} - N_{j, i}\right|$$
