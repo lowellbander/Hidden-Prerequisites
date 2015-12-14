@@ -132,14 +132,12 @@ rankCentrality = function(nmatrix) {
   names = colnames(nmatrix)
   n<-dim(nmatrix)[1]
   A <- data.matrix(nmatrix) # Aij = the number of times j occurs before i
-  #dmax = (dim(A)[1] - 1)  #not sure if this should be the max of a particular node of or of all nodes
-                          #assuming I can just use the dim - 1
   
   dmax = matrix(data=0, nrow=n, ncol=1)
   rowoutdegree = matrix(data=0, nrow=n, ncol=1)
   coloutdegree = matrix(data=0, nrow=n, ncol=1)
 
-  for (i in 1:n){ # get row out degree
+  for (i in 1:n){ # get row out degree for each node
     count = 0
     for (j in 1:n){
       if (A[i,j] != 0){
@@ -148,7 +146,7 @@ rankCentrality = function(nmatrix) {
     }
     rowoutdegree[i,1] = count-1
   }
-  for (i in 1:n){ #get col out degree
+  for (i in 1:n){ #get col out degree for each node
     count = 0
     for (j in 1:n){
       if (A[j,i] != 0){
@@ -177,28 +175,55 @@ rankCentrality = function(nmatrix) {
   for (j in 1:n) {
     P[j,j] <- 1 - sum(P[,j]);
   }
-  
 
   #we need the top left eigenvector, not sure if this is right
-  #P_eigen <- eigen(t(P))#left eigenvectors
-  P_eigen <- eigen(P)#right eigenvectors
+  P_eigen <- eigen(t(P))#left eigenvectors
+  #P_eigen <- eigen(P)#right eigenvectors
   #nonzeroEigenvalue = P_eigen$values[20];
-  nonzeroEigenvalue = P_eigen$values[P_eigen$values != 0]
-  #P_TopLeftEigenvector = P_eigen$vectors[,20]
-  P_TopLeftEigenvector = P_eigen$vectors[,length(nonzeroEigenvalue)]
-  #P_TopLeftEigenvector = P_eigen$vectors[,4]
-  sortedP_LeftEigenVector = sort(P_TopLeftEigenvector)
+  nonzeroEigenvalue = P_eigen$values[P_eigen$values == 0]
+  topEigenValueIndex = 1
+  while (P_eigen$values[topEigenValueIndex] == 0 || P_eigen$values[topEigenValueIndex] == 1)
+  {topEigenValueIndex = topEigenValueIndex + 1}
   
-  final = matrix(data=0, nrow=n, ncol=1)
+  P_TopLeftEigenvector = P_eigen$vectors[,1]
+  P_TopLeftEigenvector = P_eigen$vectors[,topEigenValueIndex]
+  #sortedP_LeftEigenVector = sort(P_TopLeftEigenvector)
   
-  for (i in 1:n) { #just sorting the eigenvector and assign
-    for (j in 1:n) {
-      if (sortedP_LeftEigenVector[i] == P_TopLeftEigenvector[j]) {
-        final[i, 1] = names[j]
-      }
+  #final = matrix(data=0, nrow=n, ncol=1)
+  final = matrix(data=0, nrow=n, ncol=2)
+  
+  #everything from here on is just manipulation to sort the eigenvector and package return it in the right format
+  for (i in 1:n) {
+    final[i,1] = P_TopLeftEigenvector[i]
+    final[i,2] = names[i]
+  }
+  
+  x = final[order(final[,1]),]
+  x1 = matrix(data=0, nrow=n, ncol=2)
+  zerocount = 1 
+  for (i in 1:n){
+    if(x[i,1] == "0+0i")
+    {
+      x1[zerocount,1] = x[i,1]
+      x1[zerocount,2] = x[i,2]
+      zerocount = zerocount +1 
     }
   }
-  return(as.vector(final))
+  index = 1
+  for (i in zerocount:n)
+  {
+    x1[i,1] = x[index,1]
+    x1[i,2] = x[index,2]
+    index = index +1
+  }
+  
+  realfinal = matrix(data=0, nrow=n, ncol=1)
+  for (i in 1:n)
+  {
+    realfinal[i,1] = x1[i,2]
+  }
+  
+  return(as.vector(realfinal))
 }
 
 compare = function (this, that, courses) {
