@@ -297,19 +297,37 @@ leastSquaresRanking = function(preferenceMatrix) {
   for (i in 1:n) {
     j <- i+1
     while (j <= n) {
-      y[k] <- abs(preferenceMatrix[i, j] - preferenceMatrix[j, i])
-      if (preferenceMatrix[i, j] >= preferenceMatrix[j, i]) {
-        X[k, i] <- -1
-        X[k, j] <- 1
-      }
-      else {
+      if (preferenceMatrix[i, j] >= preferenceMatrix[j, i] & preferenceMatrix[i, j] != 0) {
         X[k, i] <- 1
         X[k, j] <- -1
+        y[k] <- abs(preferenceMatrix[i, j] - preferenceMatrix[j, i])
+        k <- k+1
       }
-      k <- k+1
+      else if (preferenceMatrix[i, j] < preferenceMatrix[j, i] & preferenceMatrix[i, j] != 0) {
+        X[k, i] <- -1
+        X[k, j] <- 1
+        y[k] <- abs(preferenceMatrix[i, j] - preferenceMatrix[j, i])
+        k <- k+1
+      }
       j <- j+1
     }
   }
+  
+  newX = matrix(data=0, ncol=n, nrow=k-1);
+  newy = matrix(data=0, ncol=1, nrow=k-1);
+  
+  for (i in 1:k-1) {
+    for (j in 1:n) {
+      newX[i, j] <- X[i, j]
+    }
+  }
+  
+  for (i in 1:k-1) {
+    newy[i] <- y[i]
+  }
+  
+  X = newX
+  y = newy
   
   XTX = t(X) %*% X
   XTy = t(X) %*% y
@@ -317,8 +335,15 @@ leastSquaresRanking = function(preferenceMatrix) {
   for (i in 1:n) {
     XTX[n, i] <- 1;
   }
-  y[n] <- 0
-  r = solve(XTX, XTy)
+  
+  XTy[n] <- 0
+  
+  lssolutions = lm(XTy ~ XTX)$coefficients
+  r = matrix(data=0, ncol=1, nrow=n);
+  for (i in 1:n) {
+    r[i] = lssolutions[i+1]
+  }
+  rownames(r) <- colnames(preferenceMatrix)
   return(rownames(r[order(-r), , drop=FALSE]));
 }
 
@@ -418,6 +443,6 @@ doReal = function () {
   
 }
 
-#doSynthetic();
+doSynthetic();
 
-doReal();
+#doReal();

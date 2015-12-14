@@ -214,6 +214,8 @@ items $k$. Equivalently $S^{\text{match}}$ can be expressed in closed-form as $$
 % * how the above results in a lot of noise, such that analyzing the comparison matrix wasn't illuminating.
 % * compare our kendal distance algorithm to the inbuilt one
 
+\subsection{Least Squares Ranking}
+
 \subsection{DAG Construction}
 As mentioned above, we sought to create a DAG to visualize the prerequisite relationship between courses. To do this, we used the same $C$ matrix as for the Serial Rank algorithm, and computed it for both A ranked (GPA between 3.7 and 4.0) and C ranked (GPA between 1.7 and 2.3) students. We then found the difference of these two matrices, and examined entries which had large values, because these would suggest that taking the corresponding courses in a different order has had a causal role in the discrepancy between GPA for A and C students.
 
